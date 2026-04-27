@@ -1,13 +1,12 @@
-
-"use client";
  
 import { useState, useEffect, useRef } from "react";
 import {  useNavigate } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import {  FaBars, FaTimes } from "react-icons/fa";
 import { ImFilesEmpty } from "react-icons/im";
-import { MdDashboard } from "react-icons/md";
-import { FaUser, FaExchangeAlt } from "react-icons/fa";
+import { MdOutlineDashboard } from "react-icons/md";
+import {  FaExchangeAlt } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa6";
 import { ChevronDown, ChevronRight, Moon, PanelLeftClose, PanelRightClose, Power, Sun } from "lucide-react";
 
 // import useToken from "../../utils/UseToken/useToken";
@@ -15,14 +14,14 @@ import { ChevronDown, ChevronRight, Moon, PanelLeftClose, PanelRightClose, Power
 const menuItems = [
     {
         name: "Dashboard",
-        icon: MdDashboard,
+        icon: MdOutlineDashboard,
         path: "/dashboard",
         moduleKey: "",
         openInNewTab: false,
     },
     {
         name: "Manage User",
-        icon: FaUser,
+        icon: FaRegUser ,
         path: "/manage-user",
         moduleKey: "",
         openInNewTab: false,
@@ -47,7 +46,7 @@ const menuItems = [
     },
     {
         name: "Manage Admin",
-        icon: IoSettingsOutline,
+        icon: IoSettingsOutline ,
         path: "",
         moduleKey: "",
         openInNewTab: false,
@@ -370,7 +369,7 @@ export default function LeftDrawer({ open, setOpen, collapsed, setCollapsed }) {
             {/* SIDEBAR */}
             <div className={`
                 fixed top-18 left-0 z-40 mt-2
-                 h-[calc(100dvh-98px)]
+                 h-[calc(100dvh-95px)]
                 flex flex-col
                 rounded-r-3xl
                 bg-[var(--bg-leftdrawer)]
