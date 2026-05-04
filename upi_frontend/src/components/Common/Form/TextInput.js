@@ -1,5 +1,5 @@
 
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays, Clock, Eye, EyeOff } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 const TextInput = ({
@@ -124,15 +124,7 @@ const TextInput = ({
       ? { colorScheme: "light dark" }
       : undefined
   }
-  className={`w-full p-0.5 rounded-lg border
-    border-[var(--input-enable-border)]
-    text-[var(--picker-text)]
-    focus:outline-none
-    focus:ring-[0.2px] focus:ring-[#767575]
-    placeholder:text-sm
-    placeholder:text-[var(--search-placeholder)]
-    pl-2
-    transition-all duration-200
+  className={`w-full p-1 py-2 rounded-lg !text-[13px] !border !border-[var(--input-enable-border)] text-[var(--picker-text)] focus:outline-none focus:ring-[0.2px] focus:ring-[#767575] placeholder:text-[12px] placeholder:text-[var(--search-placeholder)] pl-2 bg-[var(--input-enable-bg)] transition-all duration-200
     ${disabled ? "bg-[var(--input-disable-bg)] cursor-not-allowed" : "bg-[var(--input-enable-bg)]"}
     ${hasRightIcon ? "pr-10" : ""}
     ${isPassword ? "no-password-toggle" : ""}

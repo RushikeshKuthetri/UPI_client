@@ -39,7 +39,7 @@ const SelectInput = ({
         : "var(--input-enable-border)",
       borderRadius: "0.5rem",
       boxShadow: state.isFocused ? "0 0 0 0 " : "none",
-      minHeight: "29px",
+      minHeight: "36px",
       padding: isInline ? "0 0 0 0" : "0 0 0 1px",
       fontSize: "13px",
       cursor: disabled ? "not-allowed" : "text",

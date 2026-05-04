@@ -22,7 +22,7 @@ const menuItems = [
     {
         name: "Manage User",
         icon: FaRegUser ,
-        path: "/manage-user",
+        path: "/manage-users",
         moduleKey: "",
         openInNewTab: false,
     },

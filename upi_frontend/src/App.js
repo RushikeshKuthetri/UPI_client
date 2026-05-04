@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import ManageUsers from "./pages/ManageUsers/ManageUsers";
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -25,7 +26,7 @@ function App() {
             {/* when app loades it will redirect to dashboard */}
               {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
             <Route path="/dashboard" element={<Dashboard />} />
-
+               <Route path="/manage-users" element={<ManageUsers />} />
             {/* error */}
 
                {/* <Route path="*" element={<NotFound />} /> */}

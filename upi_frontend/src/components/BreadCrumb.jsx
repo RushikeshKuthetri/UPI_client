@@ -7,7 +7,7 @@ import { ImFilesEmpty } from "react-icons/im";
 
 const ROUTE_MAP = {
     "dashboard": { label: "Dashboard", icon: MdDashboard },
-    "manage-user": { label: "Manage User", icon: FaUser },
+    "manage-users": { label: "Manage User", icon: FaUser },
     "transaction": { label: "Transaction", icon: FaExchangeAlt },
     "grade-change": { label: "Grade Change" },
     "stoppage-entry": { label: "Stoppage Entry" },

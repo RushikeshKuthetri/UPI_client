@@ -51,6 +51,7 @@ body {
   --picker-accent: #FD9F35;
   --input-disable-bg: #EAEAEA;
   --input-enable-bg: #FFFFFF;
+  --input-label:#111111;
   --input-enable-border: rgba(136, 136, 136, 0.4);
   --form-border: #CCCCCC;
   --button-border: #FD6E41;
@@ -85,6 +86,8 @@ body {
   --search-border: rgba(136, 136, 136, 0.3);
   --card-top-border-color: radial-gradient(circle, #FFCD94, #FD9F35);
   --card-border-main: #E5DFDF;
+  --modal-bg:#F1F0EE;
+   --modal-button-tab:#FFFFFF;
 
   /* added for chart visulizaton charts */
   --chart-bg: #ffffff;
@@ -116,6 +119,7 @@ body {
   --input-disable-bg: #1F2021;
   --input-enable-bg: #2B2C2D;
   --input-enable-border: #393A3C;
+   --input-label:#FFFFFF;
   --form-border: #353838;
   --button-border: #393A3C;
   --button-bg: #282829;
@@ -138,9 +142,10 @@ body {
   --card-subtle: #B4A3A3;
   --mimic-line: rgba(119, 136, 134, 0.50);
   --search-bg: rgba(47, 43, 43, 0.25);
-  --search-placeholder: #888888;
-  ;
+  --search-placeholder: #888888;;
   --search-border: rgba(255, 255, 255, 0.18);
+   --modal-bg:#212323;
+    --modal-button-tab:#494B4D;
 
   /* added for the chart visulizations chart */
   --chart-bg: #1f2937;

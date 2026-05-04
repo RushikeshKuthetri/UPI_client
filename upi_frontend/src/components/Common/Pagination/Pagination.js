@@ -23,7 +23,7 @@ const Pagination = ({
   };
 
   return (
-  <div className="flex items-center justify-between mt-2 w-full flex-wrap">
+  <div className="flex items-center justify-between  w-full flex-wrap">
     
    
     {showRowsPerPage ? (
