@@ -32,9 +32,16 @@ body {
   font-display: swap;
 }
 
+/* globals.css */
+.dark .card-wrapper {
+  background: var(--dark-bg) !important;
+}
+
 
 :root {
   /* ✅ Date & Time Picker */
+  --card-bg:#FEFAF4;
+  --card-text:#111111;
   --picker-bg: #EAEAEA;
   --header-text-color: #29292B;
   --leftdrawer-text: #4D5050;
@@ -97,6 +104,8 @@ body {
 .dark {
 
   /* ✅ Date & Time Picker */
+  --card-bg:#1D2B20;
+  --card-text:#FBFBFC;
   --picker-bg: #1f2937;
   --header-text-color: #29292B;
   --leftdrawer-text: #B7C5C5;

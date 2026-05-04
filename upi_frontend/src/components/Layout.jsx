@@ -4,8 +4,9 @@ import Header from "./Header";
 import Footer from "./Footer";
 import BreadCrumb from "./BreadCrumb";
 import { Search } from "lucide-react";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children, collapsed, setCollapsed, drawerOpen, setDrawerOpen, isAuth }) {
+export default function Layout({ children, collapsed, setCollapsed, drawerOpen, setDrawerOpen, isAuth = true }) {
   return (
     <div className="font-sans h-screen flex flex-col overflow-hidden bg-[var(--bg-color)]">
       <Header />
@@ -20,7 +21,7 @@ export default function Layout({ children, collapsed, setCollapsed, drawerOpen, 
         )}
         <div
           className={`flex-1 min-h-0 transition-all duration-300 flex flex-col ${
-            isAuth ? (collapsed ? "lg:ml-20" : "lg:ml-60") : "ml-0"
+            isAuth ? (collapsed ? "lg:ml-20 " : "lg:ml-60 ") : "ml-0"
           }`}
         >
           {/* ── Breadcrumb + Search bar ── */}
@@ -41,9 +42,9 @@ export default function Layout({ children, collapsed, setCollapsed, drawerOpen, 
           )}
 
           {/* ── Page content ── */}
-            <div className="h-full  overflow-y-auto ">
-              {children}
-            </div>
+          <div className="h-full overflow-y-auto ">
+            {children}
+          </div>
         </div>
       </main>
       <Footer />
