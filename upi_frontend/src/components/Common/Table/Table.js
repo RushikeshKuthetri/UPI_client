@@ -11,7 +11,7 @@ const Table1 = ({
             {/* Adjust border color according to theme */}
       <div className="w-full overflow-x-auto rounded-xl border-t border-l border-r  border-[var(--form-border)]"> 
 
-        <table className="w-full min-w-[1000px] border-collapse">
+        <table className="w-full border-collapse">
 
           {/* adjust bg color and gradiant accordint to the theme */}
           <thead className="bg-gradient-to-r from-orange-400 to-orange-300 text-black">
