@@ -1,5 +1,5 @@
 import React from "react";
-import { BiLogOutCircle } from "react-icons/bi";
+import { BiLogOutCircle, BiUser } from "react-icons/bi";
 
 export default function Header() {
   return (
@@ -22,27 +22,35 @@ export default function Header() {
       </div>
  
       {/* RIGHT: User + Logout */}
-      <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-[var(--header-text-color)]">
-              Welcome{" "}
-              {/* <span className="font-semibold">{authProvider?.username}</span> */}
-               <span className="font-semibold">Rahul</span>
-            </span>
+     <div className="flex items-center gap-3">
+  
+  {/* Help icon */}
+  <button className="flex items-center  justify-center w-8 h-8 rounded-full border-2 border-[#FFFFF] transition hover:opacity-80">
+    <span className="text-[#FFFFFF] text-sm font-bold">?</span>
+  </button>
 
-            <button
-            //   onClick={() => onLogoutClick(instance)}
-              className="
-      flex items-center justify-center
-      p-2 rounded-lg
-      transition-all duration-200
-      text-[var(--header-text-color)]
-      hover:bg-[var(--left-drawer-active-tab)]
-      hover:text-[#111111]
-    "
-            >
-              <BiLogOutCircle size={20} className="rotate-90" />
-            </button>
-          </div>
+  {/* Vertical divider */}
+  <div className="w-[1.5px] h-8 bg-[var(--header-text-color)] opacity-60" />
+
+  {/* Person icon + Welcome text */}
+  <div className="flex items-center gap-2">
+    <button className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-[var(--header-text-color)] transition hover:opacity-80">
+      <BiUser size={18} className="text-black" />
+    </button>
+    <div className="flex flex-col leading-tight">
+      <span className="text-xs text-[var(--header-text-color)] opacity-80">Welcome,</span>
+      <span className="text-sm font-bold text-[var(--header-text-color)]">John Doe</span>
+    </div>
+  </div>
+
+  {/* Logout */}
+  {/* <button
+    className="flex items-center justify-center p-2 rounded-lg transition-all duration-200 text-[var(--header-text-color)] hover:bg-[var(--left-drawer-active-tab)] hover:text-[#111111]"
+  >
+    <BiLogOutCircle size={20} className="rotate-90" />
+  </button> */}
+
+</div>
  
     </div>
   );

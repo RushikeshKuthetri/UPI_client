@@ -28,7 +28,7 @@ const ManageUsers = () => {
     const tableData = [1, 2, 3, 4, 5, 6, 7].map((num) => ({
         srNo: num,
         name: 'Rawans CCR2',
-        userName: '',
+        userName: 'Rahul',
         status: 'Deactive',
     }))
 

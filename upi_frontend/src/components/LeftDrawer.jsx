@@ -1,6 +1,6 @@
  
 import { useState, useEffect, useRef } from "react";
-import {  useNavigate } from "react-router-dom";
+import {  useNavigate, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import {  FaBars, FaTimes } from "react-icons/fa";
 import { ImFilesEmpty } from "react-icons/im";
@@ -216,13 +216,15 @@ export default function LeftDrawer({ open, setOpen, collapsed, setCollapsed }) {
     });
     const itemRefs = useRef({});
     const menuContainerRef = useRef(null);
-    const currentPath = window.location.pathname;
+    const location = useLocation()
+
+  const currentPath = location.pathname
     // const { token, setToken } = useToken();
     const mobileOpen = open;
     const setMobileOpen = setOpen;
     const modules = JSON.parse(localStorage.getItem("modules")) || [];
     // const pathname = useLocation();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     // Inside LeftDrawer, alongside other useState declarations:
     const [hoveredItem, setHoveredItem] = useState(null);
  
@@ -286,29 +288,43 @@ export default function LeftDrawer({ open, setOpen, collapsed, setCollapsed }) {
     const isDropdownOpen = (key) => !!openDropdowns[key];
  
  
+    // const handleNavigation = (item) => {
+    //     if (!item.path) return;
+    //     if (item.name === "Trends") {
+    //         localStorage.setItem("collapsed", "true");
+    //         // setCollapsed(); // since your toggle function flips state
+    //     }
+    //     if (item.openInNewTab) {
+    //         const fullUrl = item.path.startsWith("http")
+    //             ? item.path
+    //             : `${window.location.origin}${item.path}`;
+ 
+    //         window.open(fullUrl, "_blank", "noopener,noreferrer");
+    //     } else {
+    //         const fullUrl = item.path.startsWith("http")
+    //             ? item.path
+    //             : `${window.location.origin}${item.path}`;
+ 
+    //         window.location.href = fullUrl;   // 🔥 Forces full reload
+    //     }
+ 
+    //     setMobileOpen(false);
+    // };
+ 
     const handleNavigation = (item) => {
-        if (!item.path) return;
-        if (item.name === "Trends") {
-            localStorage.setItem("collapsed", "true");
-            // setCollapsed(); // since your toggle function flips state
-        }
-        if (item.openInNewTab) {
-            const fullUrl = item.path.startsWith("http")
-                ? item.path
-                : `${window.location.origin}${item.path}`;
- 
-            window.open(fullUrl, "_blank", "noopener,noreferrer");
-        } else {
-            const fullUrl = item.path.startsWith("http")
-                ? item.path
-                : `${window.location.origin}${item.path}`;
- 
-            window.location.href = fullUrl;   // 🔥 Forces full reload
-        }
- 
-        setMobileOpen(false);
-    };
- 
+  if (!item.path) return
+
+  if (item.openInNewTab) {
+    const fullUrl = item.path.startsWith('http')
+      ? item.path
+      : `${window.location.origin}${item.path}`
+    window.open(fullUrl, '_blank', 'noopener,noreferrer')
+  } else {
+    navigate(item.path)  // 👈 React Router navigation, no reload
+  }
+
+  setMobileOpen(false)
+}
  
  
     // Added to show the lefdrawer based on Module access and Admin tile based admin and superadmin access

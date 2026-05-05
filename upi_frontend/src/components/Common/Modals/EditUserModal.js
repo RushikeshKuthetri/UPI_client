@@ -5,6 +5,7 @@ import TextInput from '../Form/TextInput'
 import FormLabel from '../Form/InputLabel'
 import SubmitButton from '../Form/SubmitButton'
 import SelectInput from '../Form/SelectInput'
+import CheckboxInput from '../Form/CheckboxInput'
 
 
 const TABS = ['Add User', 'Assign Business Unit', 'Assign Plant', 'Assign Role']
@@ -20,6 +21,8 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     mobileNumber: user?.mobileNumber || '',
     email: user?.email || '',
     isActive: user?.isActive || false,
+      plant: user?.plant || [],
+      role: user?.role || [], 
   })
 
   const handleChange = (e) => {
@@ -31,6 +34,21 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     onSave?.(form)
     onClose()
   }
+
+  const PLANT_OPTIONS = [
+  { label: 'Ratnagiri Cement Works', value: 'ratnagiri' },
+  { label: 'Pali Cement Works', value: 'pali' },
+  { label: 'Hirmi Cement Works', value: 'hirmi' },
+  { label: 'Awarpur Cement Works', value: 'awarpur' },
+  { label: 'Kovaya Cement Works', value: 'kovaya' },
+  { label: 'Magdalla Cement Works', value: 'magdalla' },
+]
+
+const ROLE_OPTIONS = [
+  { label: 'Admin', value: 'admin' },
+  { label: 'Power User', value: 'power_user' },
+  { label: 'Users', value: 'users' },
+]
 
   return (
     <div
@@ -60,18 +78,18 @@ const EditUserModal = ({ user, onClose, onSave }) => {
         </h2>
 
         {/* Tabs */}
-       <div className="flex mx-auto w-fit items-center justify-center py-[1px] gap-1 mb-6 bg-[var(--modal-button-tab)] rounded-md">
+       <div className="flex mx-auto w-full items-center justify-center   my-3 bg-[var(--modal-button-tab)] rounded-[5px]">
   {TABS.map((tab, i) => (
     <button
       key={tab}
       onClick={() => setActiveTab(i)}
-      className="px-2 py-1 text-sm font-medium transition whitespace-nowrap"
+      className="px-5 py-1 text-sm font-medium transition whitespace-nowrap"
       style={
         activeTab === i
           ? {
               background: 'var(--submit-button-bg)',
               color: '#000000',
-              borderRadius: '6px',
+              borderRadius: '3px',
             }
           : {
               color: 'var(--text-color)',
@@ -145,16 +163,14 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     </div>
 
     {/* Is Active */}
-    <div className="flex items-center gap-3 pt-5">
-      <FormLabel required>Is Active</FormLabel>
-      <input
-        type="checkbox"
-        name="isActive"
-        checked={form.isActive}
-        onChange={handleChange}
-        className="w-4 h-4 cursor-pointer accent-[var(--submit-button-bg)]"
-      />
-    </div>
+    {/* Is Active */}
+<div className="flex items-center gap-3 pt-5 mt-3">
+  <FormLabel required>Is Active</FormLabel>
+  <CheckboxInput
+    checked={form.isActive}
+    onChange={() => setForm((prev) => ({ ...prev, isActive: !prev.isActive }))}
+  />
+</div>
 
   </div>
 )}
@@ -177,9 +193,11 @@ const EditUserModal = ({ user, onClose, onSave }) => {
           <div className="flex flex-col gap-2">
             <FormLabel required>Select Plant</FormLabel>
              <div className="w-[250px]">
-      <SelectInput
+     <SelectInput
+        isMulti
+        options={PLANT_OPTIONS}
         value={form.plant}
-        onChange={(e) => setForm((prev) => ({ ...prev, plant: e.target.value }))}
+        onChange={(selected) => setForm((prev) => ({ ...prev, plant: selected }))}
         placeholder="Select Plant"
       />
     </div>
@@ -190,9 +208,11 @@ const EditUserModal = ({ user, onClose, onSave }) => {
           <div className="flex flex-col gap-2">
             <FormLabel required>Select Role</FormLabel>
              <div className="w-[250px]">
-      <SelectInput
+     <SelectInput
+        isMulti
+        options={ROLE_OPTIONS}
         value={form.role}
-        onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
+        onChange={(selected) => setForm((prev) => ({ ...prev, role: selected }))}
         placeholder="Select Role"
       />
     </div>

@@ -11,7 +11,7 @@ const Table1 = ({
             {/* Adjust border color according to theme */}
       <div className="w-full overflow-x-auto rounded-xl border-t border-l border-r  border-[var(--form-border)]"> 
 
-        <table className="w-full min-w-[900px] border-collapse">
+        <table className="w-full min-w-[1000px] border-collapse">
 
           {/* adjust bg color and gradiant accordint to the theme */}
           <thead className="bg-gradient-to-r from-orange-400 to-orange-300 text-black">
@@ -19,14 +19,14 @@ const Table1 = ({
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="text-[14px] text-left px-6 py-1 font-semibold whitespace-nowrap border-b border-[var(--form-border)]"
+                  className="text-[14px] text-left px-2 py-1 font-semibold whitespace-nowrap border-b border-[var(--form-border)]"
                 >
                   {col.label}
                 </th>
               ))}
 
               {renderActions && (
-                <th className="text-[14px] px-6 py-1 text-left font-semibold border-b border-[var(--form-border)]">
+                <th className="text-[14px] px-2 py-1 text-left font-semibold border-b border-[var(--form-border)]">
                   Actions
                 </th>
               )}
@@ -44,7 +44,7 @@ const Table1 = ({
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className="text-[13px] px-6 py-1 whitespace-nowrap text-sm"
+                    className="text-[13px] px-2 py-1 whitespace-nowrap text-sm"
                   >
                     {col.render
                       ? col.render(row[col.key], row)
