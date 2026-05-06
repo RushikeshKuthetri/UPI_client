@@ -12,6 +12,9 @@ import EnableManualUpload from "./pages/Transaction/EnableManualUpload";
 import BusinessUnit from "./pages/ManageAdmin/BusinessUnit";
 import PlantDetails from "./pages/ManageAdmin/PlantDetails";
 import ManageRoles from "./pages/ManageAdmin/ManageRoles";
+import RoleMenuMapping from "./pages/ManageAdmin/RoleMenuMapping";
+import ManageContacts from "./pages/ManageAdmin/ManageContacts";
+import ManageSMS from "./pages/ManageAdmin/ManageSMS";
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -46,6 +49,9 @@ function App() {
              <Route path="/admin/business-unit" element={<BusinessUnit />} />
               <Route path="/admin/plant-details" element={<PlantDetails />} />
               <Route path="/admin/roles" element={<ManageRoles />} />
+              <Route path="/admin/role-menu-mapping" element={<RoleMenuMapping />} />
+              <Route path="/admin/manage-contacts" element={<ManageContacts />} />
+               <Route path="/admin/manage-sms" element={<ManageSMS />} />
 
             {/* error */}
 
