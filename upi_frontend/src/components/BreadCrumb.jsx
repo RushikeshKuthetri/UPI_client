@@ -1,5 +1,6 @@
 // src/components/Common/BreadCrumb.jsx
 import { Home } from "lucide-react";
+import { useEffect, useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { FaUser, FaExchangeAlt } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -12,11 +13,11 @@ const ROUTE_MAP = {
     "grade-change": { label: "Grade Change" },
     "stoppage-entry": { label: "Stoppage Entry" },
     "meter-reading": { label: "Meter Reading", },
-    "process-order": { label: "Process Order Confirm" },
+    "process-order-confirm": { label: "Process Order Confirm" },
     "stoppage-alert": { label: "Stoppage Alert", },
     "standby-equipment": { label: "StandBy Equipment", },
     "update-po-bom": { label: "Update PO BOM", },
-    "manual-upload": { label: "Enable Manual Upload",  },
+    "enable-manual-upload": { label: "Enable Manual Upload",  },
     "admin": { label: "Manage Admin", icon: IoSettingsOutline },
     "business-unit": { label: "Business Unit",},
     "plant-details": { label: "Plant Details" },
@@ -28,7 +29,38 @@ const ROUTE_MAP = {
 };
 
 export default function BreadCrumb() {
-    const pathname = window.location.pathname;
+    const [pathname, setPathname] = useState(window.location.pathname);
+
+    useEffect(() => {
+        // Update pathname when location changes
+        const handleLocationChange = () => {
+            setPathname(window.location.pathname);
+        };
+
+        // Listen for popstate events (back/forward navigation)
+        window.addEventListener("popstate", handleLocationChange);
+
+        // For client-side navigation (if using history.pushState or similar)
+        const originalPushState = window.history.pushState;
+        const originalReplaceState = window.history.replaceState;
+
+        window.history.pushState = function (...args) {
+            originalPushState.apply(window.history, args);
+            handleLocationChange();
+        };
+
+        window.history.replaceState = function (...args) {
+            originalReplaceState.apply(window.history, args);
+            handleLocationChange();
+        };
+
+        return () => {
+            window.removeEventListener("popstate", handleLocationChange);
+            window.history.pushState = originalPushState;
+            window.history.replaceState = originalReplaceState;
+        };
+    }, []);
+
     const segments = pathname.split("/").filter(Boolean);
 
     const crumbs = segments.map((seg, i) => ({

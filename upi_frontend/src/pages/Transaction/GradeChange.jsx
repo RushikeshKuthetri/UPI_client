@@ -8,6 +8,7 @@ import CheckboxInput from '../../components/Common/Form/CheckboxInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import IconButton from '../../components/Common/Form/IconButton'
+import TextInput from '../../components/Common/Form/TextInput'
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -135,17 +136,13 @@ const GradeChange = () => {
       <div className="flex w-full flex-wrap items-end justify-center gap-4 px-4 py-6 rounded-xl border border-[var(--form-border)]">
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Date</FormLabel>
-          <input
-            type="date"
-            value={form.date}
-            onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
-            className="px-3 py-[5px] rounded-lg text-[13px] outline-none transition w-full"
-            style={{
-              background: 'var(--input-enable-bg)',
-              border: '1px solid var(--input-enable-border)',
-              color: form.date ? 'var(--picker-text)' : 'var(--search-placeholder)',
-            }}
-          />
+         <TextInput
+              name="date"
+              value={form.date}
+            //   onChange={handleChange}
+              placeholder="dd/mm/yyyy"
+              type="date"
+            />
         </div>
 
         <div className="flex flex-col gap-1 w-[230px]">
@@ -201,12 +198,12 @@ const GradeChange = () => {
         </div>
 
         {/* Icon buttons with tooltips */}
-        <div className="flex my-2 items-center justify-end gap-4 mx-6">
+        <div className="flex my-2 items-center justify-end gap-4 mr-8">
           <IconButton icon={ClockFading} tooltip="Shift Duration" />
           <IconButton icon={Merge} tooltip="Merge" />
-          <IconButton icon={PersonStanding} tooltip="Person" />
+          <IconButton icon={PersonStanding} tooltip="Run of Job" />
           <IconButton icon={Upload} tooltip="Upload" />
-          <IconButton icon={CalendarCheck} tooltip="Calendar" />
+          <IconButton icon={CalendarCheck} tooltip="Open Event" />
         </div>
       </div>
 

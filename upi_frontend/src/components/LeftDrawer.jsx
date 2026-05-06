@@ -37,11 +37,11 @@ const menuItems = [
             { name: "Grade Change",           path: "/transaction/grade-change",        openInNewTab: false },
             { name: "Stoppage Entry",         path: "/transaction/stoppage-entry",      openInNewTab: false },
             { name: "Meter Reading",          path: "/transaction/meter-reading",       openInNewTab: false },
-            { name: "Process Order Confirm",  path: "/transaction/process-order",       openInNewTab: false },
+            { name: "Process Order Confirm",  path: "/transaction/process-order-confirm",       openInNewTab: false },
             { name: "Stoppage Alert",         path: "/transaction/stoppage-alert",      openInNewTab: false },
             { name: "StandBy Equipment",      path: "/transaction/standby-equipment",   openInNewTab: false },
             { name: "Update PO BOM",          path: "/transaction/update-po-bom",       openInNewTab: false },
-            { name: "Enable Manual Upload",   path: "/transaction/manual-upload",       openInNewTab: false },
+            { name: "Enable Manual Upload",   path: "/transaction/enable-manual-upload",       openInNewTab: false },
         ],
     },
     {
