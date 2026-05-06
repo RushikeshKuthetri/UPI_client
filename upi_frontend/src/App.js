@@ -15,6 +15,7 @@ import ManageRoles from "./pages/ManageAdmin/ManageRoles";
 import RoleMenuMapping from "./pages/ManageAdmin/RoleMenuMapping";
 import ManageContacts from "./pages/ManageAdmin/ManageContacts";
 import ManageSMS from "./pages/ManageAdmin/ManageSMS";
+import StoppageAlert from "./pages/Transaction/StoppageAlert";
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -43,6 +44,7 @@ function App() {
             <Route path="/transaction/stoppage-entry" element={<StoppageEntry />} />
             <Route path="/transaction/meter-reading" element={<MeterReading />} />
             <Route path="/transaction/process-order-confirm" element={<ProcessOrderConfirm />} />
+            <Route path="/transaction/stoppage-alert" element={<StoppageAlert/>} />
 
             <Route path="/transaction/update-po-bom" element={<UpdatePoBOM />} />
             <Route path="/transaction/enable-manual-upload" element={<EnableManualUpload />} />
