@@ -19,13 +19,13 @@ const menuItems = [
         moduleKey: "",
         openInNewTab: false,
     },
-    {
-        name: "Manage User",
-        icon: FaRegUser ,
-        path: "/manage-users",
-        moduleKey: "",
-        openInNewTab: false,
-    },
+    // {
+    //     name: "Manage User",
+    //     icon: FaRegUser ,
+    //     path: "/manage-users",
+    //     moduleKey: "",
+    //     openInNewTab: false,
+    // },
     {
         name: "Transaction",
         icon: FaExchangeAlt,
@@ -39,7 +39,7 @@ const menuItems = [
             { name: "Meter Reading",          path: "/transaction/meter-reading",       openInNewTab: false },
             { name: "Process Order Confirm",  path: "/transaction/process-order-confirm",       openInNewTab: false },
             { name: "Stoppage Alert",         path: "/transaction/stoppage-alert",      openInNewTab: false },
-            { name: "StandBy Equipment",      path: "/transaction/standby-equipment",   openInNewTab: false },
+            // { name: "StandBy Equipment",      path: "/transaction/standby-equipment",   openInNewTab: false },
             { name: "Update PO BOM",          path: "/transaction/update-po-bom",       openInNewTab: false },
             { name: "Enable Manual Upload",   path: "/transaction/enable-manual-upload",       openInNewTab: false },
         ],
@@ -56,17 +56,17 @@ const menuItems = [
             { name: "Plant Details",      path: "/admin/plant-details",      roles: ["admin", "super_admin"] },
             { name: "Roles",              path: "/admin/roles",              roles: ["admin", "super_admin"] },
             { name: "Role Menu Mapping",  path: "/admin/role-menu-mapping",  roles: ["admin", "super_admin"] },
-            { name: "Manage Contacts",    path: "/admin/manage-contacts",    roles: ["admin", "super_admin"] },
-            { name: "Manage SMS",         path: "/admin/manage-sms",         roles: ["admin", "super_admin"] },
+            // { name: "Manage Contacts",    path: "/admin/manage-contacts",    roles: ["admin", "super_admin"] },
+            // { name: "Manage SMS",         path: "/admin/manage-sms",         roles: ["admin", "super_admin"] },
         ],
     },
-    {
-        name: "Reports",
-        icon: ImFilesEmpty,
-        path: "/reports",
-        moduleKey: "",
-        openInNewTab: false,
-    },
+    // {
+    //     name: "Reports",
+    //     icon: ImFilesEmpty,
+    //     path: "/reports",
+    //     moduleKey: "",
+    //     openInNewTab: false,
+    // },
 ];
  
 // ── Tree connector dimensions ─────────────────────────────────────

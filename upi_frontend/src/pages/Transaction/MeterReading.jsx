@@ -84,7 +84,7 @@ const MeterReading = () => {
                 </h2>
             </div>
 
-            <div className="flex w-full flex-wrap items-end justify-center gap-4 px-4 py-6 rounded-xl border border-[var(--form-border)]">
+            <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
                 <div className="flex flex-col gap-1 w-[230px]">
                     <FormLabel required>Select Date</FormLabel>
                     <TextInput

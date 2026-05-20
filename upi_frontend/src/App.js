@@ -37,7 +37,7 @@ function App() {
         <div className="flex-1 min-h-0 overflow-y-auto pt-2 pl-1">
           <Routes>
             {/* when app loades it will redirect to dashboard */}
-            {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/manage-users" element={<ManageUsers />} />
             <Route path="/transaction/grade-change" element={<GradeChange />} />
@@ -52,8 +52,8 @@ function App() {
               <Route path="/admin/plant-details" element={<PlantDetails />} />
               <Route path="/admin/roles" element={<ManageRoles />} />
               <Route path="/admin/role-menu-mapping" element={<RoleMenuMapping />} />
-              <Route path="/admin/manage-contacts" element={<ManageContacts />} />
-               <Route path="/admin/manage-sms" element={<ManageSMS />} />
+              {/* <Route path="/admin/manage-contacts" element={<ManageContacts />} />
+               <Route path="/admin/manage-sms" element={<ManageSMS />} /> */}
 
             {/* error */}
 

@@ -24,7 +24,7 @@ const MOCK_DATA = Array.from({ length: 8 }, (_, i) => ({
   stopTime: '07:22:02',
   startTime: '07:22:02',
   duration: '00:00:23',
-  material: 'N53C..',
+  material: 'N53C123',
   type: '',
   reason: '',
   department: '',
@@ -198,7 +198,7 @@ const handleEditChange = (field) => (e) =>
       </div>
 
       {/* Filter Card */}
-      <div className="flex w-full flex-wrap items-end justify-center gap-4 px-4 py-6 rounded-xl border border-[var(--form-border)]">
+      <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Date</FormLabel>
           <TextInput
