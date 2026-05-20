@@ -1,24 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FormLabel from '../../components/Common/Form/InputLabel'
 import SelectInput from '../../components/Common/Form/SelectInput'
 import SubmitButton from '../../components/Common/Form/SubmitButton'
-import TimeInput from '../../components/Common/Form/TimeInput'
 import { CalendarCheck, ClockFading, Merge, PersonStanding, RefreshCcw, SendHorizontal, SquarePen, Upload } from 'lucide-react'
 import CheckboxInput from '../../components/Common/Form/CheckboxInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import IconButton from '../../components/Common/Form/IconButton'
 import TextInput from '../../components/Common/Form/TextInput'
+import { getAPI } from '../../utils/api'
+import DateTimePicker from '../../components/Common/Form/DatePicker'
 
-const PLANT_OPTIONS = [
-  { label: 'Plant A', value: 'plant_a' },
-  { label: 'Plant B', value: 'plant_b' },
-]
-
-const LINE_OPTIONS = [
-  { label: 'Line 1', value: 'line_1' },
-  { label: 'Line 2', value: 'line_2' },
-]
 
 // ── Tooltip Icon Button ──────────────────────────────────────────
 
@@ -42,6 +34,9 @@ const RESOURCE_MOCK_DATA = [
 ]
 
 const GradeChange = () => {
+  // States
+  const [plantOptions, setPlantOptions] = useState([])
+  const [lineOptions, setLineOptions] = useState([])
   const [tableData, setTableData] = useState(MOCK_DATA)
   const [resourceData, setResourceData] = useState(RESOURCE_MOCK_DATA)
   const [form, setForm] = useState({
@@ -52,6 +47,67 @@ const GradeChange = () => {
     endTime: '',
   })
 
+  // plant options fetch
+const fetchPlants = async () => {
+  try {
+    const response = await getAPI('/unit/getUnits');
+
+    const formattedPlants = response.data.map((item) => ({
+      label: item.UnitName,
+      value: item.Id, // IMPORTANT
+    }));
+
+    setPlantOptions(formattedPlants);
+
+  } catch (error) {
+    console.error('Error fetching plants:', error);
+  }
+};
+
+  useEffect(() => {
+    fetchPlants()
+  }, [])
+
+  // line options fetch
+  // line options fetch by unitId
+  const fetchLines = async (unitId) => {
+    try {
+      if (!unitId) {
+        setLineOptions([]);
+        return;
+      }
+
+      const response = await getAPI(`/line/unit/${unitId}`);
+
+      const formattedLines = response.data.map((item) => ({
+        label: item.LineName,
+        value: item.LineCode,
+      }));
+
+      setLineOptions(formattedLines);
+
+    } catch (error) {
+      console.error("Error fetching lines:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlants();
+  }, []);
+
+
+  const handlePlantChange = async (e) => {
+    const selectedUnitId = e.target.value;
+
+    setForm((prev) => ({
+      ...prev,
+      plant: selectedUnitId,
+      line: "", // reset line on plant change
+    }));
+
+    await fetchLines(selectedUnitId);
+  };
+
   const toggleSelect = (id) => {
     setTableData((prev) =>
       prev.map((row) => (row.id === id ? { ...row, selected: !row.selected } : row))
@@ -59,10 +115,10 @@ const GradeChange = () => {
   }
 
   const toggleResourceSelect = (id) => {
-  setResourceData((prev) =>
-    prev.map((row) => (row.id === id ? { ...row, selected: !row.selected } : row))
-  )
-}
+    setResourceData((prev) =>
+      prev.map((row) => (row.id === id ? { ...row, selected: !row.selected } : row))
+    )
+  }
 
   const columns = [
     {
@@ -103,18 +159,18 @@ const GradeChange = () => {
   ]
 
   const resourceColumns = [
-  {
-    key: 'selected',
-    label: 'Select',
-    render: (value, row) => (
-      <CheckboxInput
-        checked={value}
-        onChange={() => toggleResourceSelect(row.id)}
-      />
-    ),
-  },
-  { key: 'resource', label: 'Resource' },
-]
+    {
+      key: 'selected',
+      label: 'Select',
+      render: (value, row) => (
+        <CheckboxInput
+          checked={value}
+          onChange={() => toggleResourceSelect(row.id)}
+        />
+      ),
+    },
+    { key: 'resource', label: 'Resource' },
+  ]
 
   const handleSelect = (name) => (e) =>
     setForm((prev) => ({ ...prev, [name]: e.target.value }))
@@ -136,29 +192,30 @@ const GradeChange = () => {
       <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Date</FormLabel>
-         <TextInput
-              name="date"
-              value={form.date}
-            //   onChange={handleChange}
-              placeholder="dd/mm/yyyy"
-              type="date"
-            />
+          <DateTimePicker
+            value={form.date}
+            // onChange={(date) => setStartDate(date)}
+            onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+            placeholder="Select Date"
+            showTime={false}
+            dateFormat="dd/MM/yyyy"
+          />
         </div>
 
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Plant Name</FormLabel>
-          <SelectInput
-            options={PLANT_OPTIONS}
-            value={form.plant}
-            onChange={handleSelect('plant')}
-            placeholder="Select Plant"
-          />
+        <SelectInput
+  options={plantOptions}
+  value={form.plant}
+  onChange={handlePlantChange}
+  placeholder="Select Plant"
+/>
         </div>
 
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Line</FormLabel>
           <SelectInput
-            options={LINE_OPTIONS}
+            options={lineOptions}
             value={form.line}
             onChange={handleSelect('line')}
             placeholder="Select Line"
@@ -212,17 +269,17 @@ const GradeChange = () => {
           columns={columns}
           data={tableData}
         />
-        <Pagination/>
+        <Pagination />
       </div>
 
       <div className='flex flex-col items-center justify-center'>
         <label > Resource Wise Duration</label>
-          <div className="overflow-x-auto w-full mt-2 mb-4">
-    <Table1
-      columns={resourceColumns}
-      data={resourceData}
-    />
-  </div>
+        <div className="overflow-x-auto w-full mt-2 mb-4">
+          <Table1
+            columns={resourceColumns}
+            data={resourceData}
+          />
+        </div>
       </div>
 
     </div>

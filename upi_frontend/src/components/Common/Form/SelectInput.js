@@ -117,21 +117,26 @@ const SelectInput = ({
       maxHeight: "192px",
     }),
 
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isSelected
-        ? "var(--select-input)"
-        : state.isFocused
-        ? "var(--select-input-hover)"
-        : "transparent",
-      color: "var(--select-input-value)",
-      fontSize: "13px",
-      cursor: "pointer",
-      padding: "8px 12px",
-      "&:active": {
-        backgroundColor: "var(--select-input)",
-      },
-    }),
+   option: (base, state) => ({
+  ...base,
+  backgroundColor: state.isSelected
+    ? "#FD9F35" // selected option bg
+    : state.isFocused
+    ? "var(--select-input-hover)"
+    : "transparent",
+
+  color: state.isSelected
+    ? "#fff" // selected text white
+    : "var(--select-input-value)",
+
+  fontSize: "13px",
+  cursor: "pointer",
+  padding: "8px 12px",
+
+  "&:active": {
+    backgroundColor: "#FD9F35",
+  },
+}),
 
     indicatorSeparator: () => ({ display: "none" }),  // removes the "|" divider
 

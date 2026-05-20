@@ -196,3 +196,93 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+
+
+
+
+
+
+.react-datepicker {
+  background-color: var(--input-enable-bg) !important;
+  border: 1px solid var(--form-border) !important;
+  color: var(--text-color) !important;
+}
+
+.react-datepicker__header {
+  background-color: var(--picker-bg) !important;
+  border-bottom: 1px solid var(--form-border) !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: var(--text-color) !important;
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  color: var(--text-color) !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--picker-hover) !important;
+  border-radius: 4px;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--picker-accent) !important;
+  color: #fff !important;
+  border-radius: 4px;
+}
+
+.react-datepicker__day--today {
+  border: 1px solid var(--picker-accent);
+}
+
+/* Time panel */
+
+.react-datepicker__time-container {
+  border-left: 1px solid var(--form-border) !important;
+}
+
+.react-datepicker__time,
+.react-datepicker__time-box,
+.react-datepicker__time-list {
+  background-color: var(--input-enable-bg) !important;
+}
+
+.react-datepicker__time-list-item {
+  color: var(--text-color) !important;
+}
+
+.react-datepicker__time-list-item:hover {
+  background-color: var(--picker-hover) !important;
+}
+
+.react-datepicker__time-list-item--selected {
+  background-color: var(--picker-accent) !important;
+  color: #fff !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box .react-datepicker__time-list .react-datepicker__time-list-item--selected,
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box .react-datepicker__time-list .react-datepicker__time-list-item--keyboard-selected {
+  background-color: var(--picker-accent) !important;
+  color: #fff !important;
+}
+
+/* Ensure base items don’t override */
+.react-datepicker__time-list-item {
+  background-color: transparent !important;
+}
+
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
+
