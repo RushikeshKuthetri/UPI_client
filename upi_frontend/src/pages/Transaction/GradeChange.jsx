@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import FormLabel from '../../components/Common/Form/InputLabel'
 import SelectInput from '../../components/Common/Form/SelectInput'
 import SubmitButton from '../../components/Common/Form/SubmitButton'
-import { CalendarCheck, ClockFading, Merge, PersonStanding, RefreshCcw, SendHorizontal, SquarePen, Upload } from 'lucide-react'
+import { CalendarCheck, Check, ClockFading, CloudCog, Merge, PersonStanding, RefreshCcw, SendHorizontal, SquarePen, Upload, X } from 'lucide-react'
 import CheckboxInput from '../../components/Common/Form/CheckboxInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import IconButton from '../../components/Common/Form/IconButton'
 import TextInput from '../../components/Common/Form/TextInput'
-import { getAPI } from '../../utils/api'
+import { getAPI, postAPI } from '../../utils/api'
 import DateTimePicker from '../../components/Common/Form/DatePicker'
 
 
@@ -37,8 +37,13 @@ const GradeChange = () => {
   // States
   const [plantOptions, setPlantOptions] = useState([])
   const [lineOptions, setLineOptions] = useState([])
-  const [tableData, setTableData] = useState(MOCK_DATA)
-  const [resourceData, setResourceData] = useState(RESOURCE_MOCK_DATA)
+  const [tableData, setTableData] = useState([])
+  const [resourceData, setResourceData] = useState([])
+  const [reasonOptions, setReasonOptions] = useState([]);
+const [editingRowId, setEditingRowId] =
+  useState(null);
+
+const [tempReason, setTempReason] =useState("");
   const [form, setForm] = useState({
     date: '',
     plant: '',
@@ -48,25 +53,24 @@ const GradeChange = () => {
   })
 
   // plant options fetch
-const fetchPlants = async () => {
-  try {
-    const response = await getAPI('/unit/getUnits');
+  const fetchPlants = async () => {
+    try {
+      const response = await getAPI('/unit/getUnits');
 
-    const formattedPlants = response.data.map((item) => ({
-      label: item.UnitName,
-      value: item.Id, // IMPORTANT
-    }));
+      const formattedPlants = response.data.map((item) => ({
+        label: item.UnitName,
+        value: item.PlantCode, // P001
+        unitId: item.Id, // for line API
+      }));
 
-    setPlantOptions(formattedPlants);
+      setPlantOptions(formattedPlants);
 
-  } catch (error) {
-    console.error('Error fetching plants:', error);
-  }
-};
+    } catch (error) {
+      console.error('Error fetching plants:', error);
+    }
+  };
 
-  useEffect(() => {
-    fetchPlants()
-  }, [])
+
 
   // line options fetch
   // line options fetch by unitId
@@ -91,21 +95,39 @@ const fetchPlants = async () => {
     }
   };
 
-  useEffect(() => {
-    fetchPlants();
-  }, []);
+useEffect(() => {
+  fetchPlants();
+  fetchReasons();
+}, []);
+
+
+const handleReasonChange = (id, value) => {
+  setTableData((prev) =>
+    prev.map((row) =>
+      row.id === id
+        ? { ...row, reason: value }
+        : row
+    )
+  );
+};
 
 
   const handlePlantChange = async (e) => {
-    const selectedUnitId = e.target.value;
+    const plantCode = e.target.value;
+
+    const selectedPlant = plantOptions.find(
+      (item) => item.value === plantCode
+    );
 
     setForm((prev) => ({
       ...prev,
-      plant: selectedUnitId,
-      line: "", // reset line on plant change
+      plant: plantCode,
+      line: "",
     }));
 
-    await fetchLines(selectedUnitId);
+    if (selectedPlant?.unitId) {
+      await fetchLines(selectedPlant.unitId);
+    }
   };
 
   const toggleSelect = (id) => {
@@ -136,17 +158,81 @@ const fetchPlants = async () => {
     { key: 'startTime', label: 'Start Time' },
     { key: 'stopTime', label: 'Stop Time' },
     { key: 'duration', label: 'Duration' },
-    { key: 'reason', label: 'Reason' },
+ {
+  key: 'reason',
+  label: 'Reason',
+  render: (value, row) => {
+    const isEditing =
+      editingRowId === row.id;
+
+    return isEditing ? (
+    <SelectInput
+  compact
+  options={reasonOptions}
+  value={tempReason}
+  onChange={(e) =>
+    setTempReason(e.target.value)
+  }
+/>
+    ) : (
+      <span>
+        {
+          reasonOptions.find(
+            (r) => r.value === value
+          )?.label || value || '—'
+        }
+      </span>
+    );
+  },
+},
     { key: 'remarks', label: 'Remarks' },
-    {
-      key: 'action',
-      label: 'Action',
-      render: (_, row) => (
-        <button className="transition hover:opacity-70" style={{ color: '#8A38F5' }}>
-          <SquarePen size={16} strokeWidth={2.5} />
+  {
+  key: 'action',
+  label: 'Action',
+  render: (_, row) => {
+    const isEditing =
+      editingRowId === row.id;
+
+    return isEditing ? (
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() =>
+            handleSaveReason(row.id)
+          }
+          className="text-green-600 hover:opacity-70"
+        >
+          <Check
+            size={18}
+            strokeWidth={2.5}
+          />
         </button>
-      ),
-    },
+
+        <button
+          onClick={handleCancelEdit}
+          className="text-red-600 hover:opacity-70"
+        >
+          <X
+            size={18}
+            strokeWidth={2.5}
+          />
+        </button>
+      </div>
+    ) : (
+      <button
+        className="transition hover:opacity-70"
+        style={{ color: '#8A38F5' }}
+        onClick={() =>
+          handleEditClick(row)
+        }
+      >
+        <SquarePen
+          size={16}
+          strokeWidth={2.5}
+        />
+      </button>
+    );
+  },
+},
     {
       key: 'sapStatus',
       label: 'SAP status',
@@ -170,7 +256,41 @@ const fetchPlants = async () => {
       ),
     },
     { key: 'resource', label: 'Resource' },
+    { key: 'totalDuration', label: 'Total Duration' },
   ]
+
+const fetchReasons = async () => {
+  try {
+    const response = await getAPI(
+      "/grade-change/LoadReasonGridView"
+    );
+
+    console.log(
+      "Reason API for the reason field:",
+      response.data
+    );
+
+    const formattedReasons =
+      response.data.map((item) => ({
+        label: item?.GRDTX, 
+        value: item?.GRUND, 
+      }));
+
+    console.log(
+      "Formatted Reasons:",
+      formattedReasons
+    );
+
+    setReasonOptions(formattedReasons);
+  } catch (error) {
+    console.error(
+      "Error fetching reasons:",
+      error
+    );
+  }
+};
+
+
 
   const handleSelect = (name) => (e) =>
     setForm((prev) => ({ ...prev, [name]: e.target.value }))
@@ -178,8 +298,91 @@ const fetchPlants = async () => {
   const handleReset = () =>
     setForm({ date: '', plant: '', line: '', startTime: '', endTime: '' })
 
-  const handleSubmit = () => console.log('Submitted:', form)
+ const handleSubmit = async () => {
+  try {
+    if (!form.date || !form.plant || !form.line) {
+      alert("Please fill all required fields");
+      return;
+    }
 
+    const payload = {
+      PlantCode: form.plant,
+      Line: form.line,
+      FromDate: new Date(form.date).toISOString(),
+      ToDate: new Date().toISOString(),
+    };
+
+    console.log("Payload:", payload);
+
+    const data = await postAPI(
+      "/grade-change/getData",
+      payload
+    );
+
+    console.log("API Response:", data);
+
+    if (data?.success) {
+      const formattedGradeData =
+        data.gradeChangeData.map((item, index) => ({
+          id: index + 1,
+          selected: item.selected,
+          resource: item.resource,
+          material: item.material,
+          startTime: item.startTime,
+          stopTime: item.stopTime,
+          duration: item.duration,
+          reason: item.reason,
+          remarks: item.remarks,
+          sapStatus: item.sapStatus,
+          hiddenSapStatus: item.hiddenSapStatus,
+          postingDate: item.postingDate,
+          plantCode: item.plantCode,
+          serialNumber: item.serialNumber,
+        }));
+
+      const formattedResourceData =
+        data.resourceWiseDuration.map(
+          (item, index) => ({
+            id: index + 1,
+            selected: false,
+            resource: item.resource,
+            totalDuration: item.totalDuration,
+          })
+        );
+
+      setTableData(formattedGradeData);
+      setResourceData(formattedResourceData);
+    }
+  } catch (error) {
+    console.error(
+      "Error fetching grade change data:",
+      error
+    );
+  }
+};
+
+const handleSaveReason = (id) => {
+  setTableData((prev) =>
+    prev.map((row) =>
+      row.id === id
+        ? { ...row, reason: tempReason }
+        : row
+    )
+  );
+
+  setEditingRowId(null);
+  setTempReason("");
+};
+
+const handleCancelEdit = () => {
+  setEditingRowId(null);
+  setTempReason("");
+};
+
+const handleEditClick = (row) => {
+  setEditingRowId(row.id);
+  setTempReason(row.reason); // GM02
+};
   return (
     <div className="w-full h-full">
       <div className="flex justify-between items-center mb-3">
@@ -204,12 +407,12 @@ const fetchPlants = async () => {
 
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Plant Name</FormLabel>
-        <SelectInput
-  options={plantOptions}
-  value={form.plant}
-  onChange={handlePlantChange}
-  placeholder="Select Plant"
-/>
+          <SelectInput
+            options={plantOptions}
+            value={form.plant}
+            onChange={handlePlantChange}
+            placeholder="Select Plant"
+          />
         </div>
 
         <div className="flex flex-col gap-1 w-[230px]">

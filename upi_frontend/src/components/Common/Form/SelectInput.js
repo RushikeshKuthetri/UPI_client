@@ -12,6 +12,11 @@ const SelectInput = ({
   placeholder = "Select option",
   isInline = false,
   isMulti = false,
+  compact = false, // NEW PROP
+  menuPortalTarget =
+    typeof document !== "undefined"
+      ? document.body
+      : null,
 }) => {
   // Convert value(s) to react-select format { label, value }
   const toOption = (val) => options.find((o) => o.value === val) || null;
@@ -29,52 +34,92 @@ const SelectInput = ({
   };
 
   const customStyles = {
-    control: (base, state) => ({
-      ...base,
-      backgroundColor: "var(--input-enable-bg)",
-      borderColor: error
-        ? "#ef4444"
-        : state.isFocused
+   control: (base, state) => ({
+  ...base,
+  backgroundColor:
+    "var(--input-enable-bg)",
+  borderColor: error
+    ? "#ef4444"
+    : state.isFocused
+    ? "#888888"
+    : "var(--input-enable-border)",
+  borderRadius: "0.5rem",
+  boxShadow: "none",
+
+  minHeight: compact
+    ? "30px"
+    : "36px",
+
+  height: compact
+    ? "30px"
+    : "36px",
+
+  padding: isInline
+    ? "0"
+    : compact
+    ? "0 0 0 1px"
+    : "0 0 0 1px",
+
+  fontSize: compact
+    ? "12px"
+    : "13px",
+
+  cursor: disabled
+    ? "not-allowed"
+    : "text",
+
+  opacity: disabled ? 0.6 : 1,
+
+  "&:hover": {
+    borderColor:
+      state.isFocused
         ? "#888888"
         : "var(--input-enable-border)",
-      borderRadius: "0.5rem",
-      boxShadow: state.isFocused ? "0 0 0 0 " : "none",
-      minHeight: "36px",
-      padding: isInline ? "0 0 0 0" : "0 0 0 1px",
-      fontSize: "13px",
-      cursor: disabled ? "not-allowed" : "text",
-      opacity: disabled ? 0.6 : 1,
-      "&:hover": {
-        borderColor: state.isFocused ? "#888888" : "var(--input-enable-border)",
-      },
-    }),
+  },
+}),
 
-    valueContainer: (base) => ({
-      ...base,
-      padding: isInline ? "0 4px" : "2px 4px",
-      gap: "4px",
-      flexWrap: isInline ? "nowrap" : "wrap",
-    }),
+   valueContainer: (base) => ({
+  ...base,
+  padding: compact
+    ? "0 4px"
+    : isInline
+    ? "0 4px"
+    : "2px 4px",
 
-    input: (base) => ({
-      ...base,
-      color: "var(--select-input-value)",
-      fontSize: "13px",
-      margin: 0,
-      padding: 0,
-    }),
+  gap: "4px",
+  flexWrap: isInline
+    ? "nowrap"
+    : "wrap",
+}),
 
-    placeholder: (base) => ({
-      ...base,
-      color: "var(--search-placeholder)",
-      fontSize: "13px",
-    }),
+   input: (base) => ({
+  ...base,
+  color:
+    "var(--select-input-value)",
+  fontSize: compact
+    ? "12px"
+    : "13px",
+  margin: 0,
+  padding: 0,
+}),
 
-    singleValue: (base) => ({
-      ...base,
-      color: "var(--select-input-value)",
-      fontSize: "13px",
-    }),
+   placeholder: (base) => ({
+  ...base,
+  color:
+    "var(--search-placeholder)",
+  fontSize: compact
+    ? "12px"
+    : "13px",
+}),
+
+   singleValue: (base) => ({
+  ...base,
+  color:
+    "var(--select-input-value)",
+  fontSize: compact
+    ? "12px"
+    : "13px",
+}),
 
     multiValue: (base) => ({
       ...base,
@@ -149,12 +194,29 @@ const SelectInput = ({
       "&:hover": { opacity: 1 },
     }),
 
-    dropdownIndicator: (base, state) => ({
+   dropdownIndicator: (
+  base,
+  state
+) => ({
+  ...base,
+  color:
+    "var(--search-placeholder)",
+  padding: compact
+    ? "0 4px"
+    : "0 6px",
+
+  transition:
+    "transform 300ms ease-in-out",
+
+  transform:
+    state.selectProps.menuIsOpen
+      ? "rotate(180deg)"
+      : "rotate(0deg)",
+}),
+
+    menuPortal: (base) => ({
       ...base,
-      color: "var(--search-placeholder)",
-      padding: "0 6px",
-      transition: "transform 300ms ease-in-out",
-      transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : "rotate(0deg)",
+      zIndex: 9999,
     }),
   };
 
@@ -172,6 +234,7 @@ const SelectInput = ({
         styles={customStyles}
         classNamePrefix="rs"
         menuPosition="absolute"
+        menuPortalTarget={menuPortalTarget}
         noOptionsMessage={() => "No options found"}
       />
       {error && <p className="text-red-400 text-xs mt-1">{error}</p>}

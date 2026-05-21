@@ -1,29 +1,74 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Cards from '../../components/Common/Cards/Cards'
 import { CheckCircle, User, Users } from 'lucide-react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
+import { getAPI } from '../../utils/api'
 
 const Dashboard = () => {
+    const [cardData, setCardData] = useState({
+        noOfHits: 189225,
+        hitsMtd: 16,
+        uniqueUserHits: 88,
+        uniqueUserMtd: 2,
+    })
+    const [tableData, setTableData] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+
+    const fetchDashboardData = async () => {
+        try {
+            const cardResponse = await getAPI('/dashboard/')
+            if (cardResponse && cardResponse.success && cardResponse.data && cardResponse.data.length > 0) {
+                const totalHits = cardResponse.data.reduce((acc, curr) => acc + (Number(curr.NoOfHits) || 0), 0)
+                const totalHitsMtd = cardResponse.data.reduce((acc, curr) => acc + (Number(curr.HitsMTD) || 0), 0)
+                const totalUniqueHits = cardResponse.data.reduce((acc, curr) => acc + (Number(curr.UniqueUserHits) || 0), 0)
+                const totalUniqueMtd = cardResponse.data.reduce((acc, curr) => acc + (Number(curr.UniqueUserMTD) || 0), 0)
+
+                setCardData({
+                    noOfHits: totalHits,
+                    hitsMtd: totalHitsMtd,
+                    uniqueUserHits: totalUniqueHits,
+                    uniqueUserMtd: totalUniqueMtd,
+                })
+            }
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error)
+        }
+
+        try {
+            const summaryResponse = await getAPI('/dashboard/module-summary')
+            if (summaryResponse && summaryResponse.success && summaryResponse.data?.moduleSummary) {
+                setTableData(summaryResponse.data.moduleSummary)
+            }
+        } catch (error) {
+            console.error('Error fetching module summary data:', error)
+        }
+    }
+
+    useEffect(() => {
+        fetchDashboardData()
+    }, [])
+
     const columns = [
-        { key: 'date', label: 'Date' },
-        { key: 'module', label: 'Module' },
-        { key: 'plant', label: 'Plant' },
-        { key: 'liveEntry', label: 'Live Entry (From OSIPI)' },
-        { key: 'manualEntry', label: 'Manual Entry' },
-        { key: 'totalEntry', label: 'Total Entry' },
-        { key: 'uploaded', label: 'Uploaded' },
+        { 
+            key: 'Date', 
+            label: 'Date',
+            render: (val) => val ? new Date(val).toLocaleDateString('en-GB') : '—'
+        },
+        { key: 'Module', label: 'Module' },
+        { key: 'Plant', label: 'Plant' },
+        { key: 'LiveEntryFromOSIPI', label: 'Live Entry (From OSIPI)' },
+        { key: 'ManualEntry', label: 'Manual Entry' },
+        { key: 'TotalEntry', label: 'Total Entry' },
+        { key: 'Uploaded', label: 'Uploaded' },
     ]
 
-    const tableData = Array(9).fill(null).map((_, i) => ({
-        date: '3/4/2026 12:00:00 AM',
-        module: 'Grade Change',
-        plant: 'AC01',
-        liveEntry: 38,
-        manualEntry: 0,
-        totalEntry: 30,
-        uploaded: 0,
-    }))
+    const totalPages = Math.ceil(tableData.length / rowsPerPage) || 1
+    const paginatedData = tableData.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+    )
 
     return (
         <div className="w-full h-full">
@@ -43,7 +88,7 @@ const Dashboard = () => {
 
                 <Cards
                     title="No. of Hits"
-                    value="1,89,225"
+                    value={cardData.noOfHits.toLocaleString('en-IN')}
                     color="#FF9402"
                     bgShade="#FEFAF4"
                     darkBg="linear-gradient(180deg, #302F2F 55.09%, #382E22 100%)"
@@ -52,7 +97,7 @@ const Dashboard = () => {
 
                 <Cards
                     title="Hits MTD"
-                    value="16"
+                    value={cardData.hitsMtd.toLocaleString('en-IN')}
                     color="#3CCE49"
                     bgShade="#FEFAF4"
                     darkBg="linear-gradient(180deg, #302F2F 0%, #1D2B20 100%)"
@@ -61,7 +106,7 @@ const Dashboard = () => {
 
                 <Cards
                     title="Unique User Hits"
-                    value="88"
+                    value={cardData.uniqueUserHits.toLocaleString('en-IN')}
                     color="#F14B44"
                     bgShade="#FEFAF4"
                     darkBg="linear-gradient(180deg, #302F2F 55.09%, #382E22 100%)"
@@ -70,7 +115,7 @@ const Dashboard = () => {
 
                 <Cards
                     title="Unique User MTD"
-                    value="2"
+                    value={cardData.uniqueUserMtd.toLocaleString('en-IN')}
                     color="#319AFE"
                     bgShade="#FEFAF4"
                     darkBg="linear-gradient(180deg, #302F2F 0%, #1D2B20 100%)"
@@ -80,10 +125,19 @@ const Dashboard = () => {
             </div>
 
             <div className='my-2'>
-                 <Table1 columns={columns} data={tableData} />
+                <Table1 columns={columns} data={paginatedData} />
             </div>
             <div className='mx-1'>
-                <Pagination/>
+                <Pagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsChange={(rows) => {
+                        setRowsPerPage(rows)
+                        setCurrentPage(1)
+                    }}
+                />
             </div>
 
         </div>

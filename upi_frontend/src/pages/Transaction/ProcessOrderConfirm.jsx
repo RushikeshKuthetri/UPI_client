@@ -6,6 +6,7 @@ import TextInput from '../../components/Common/Form/TextInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import { Eye, RefreshCcw, SquarePen, Undo2 } from 'lucide-react'
+import DateTimePicker from '../../components/Common/Form/DatePicker'
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -83,13 +84,14 @@ const ProcessOrderConfirm = () => {
      <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
             <div className="flex flex-col gap-1 w-[230px]">
               <FormLabel required>Select Date</FormLabel>
-              <TextInput
-                  name="date"
-                  value={form.date}
-                //   onChange={handleChange}
-                  placeholder="dd/mm/yyyy"
-                  type="date"
-                />
+              <DateTimePicker
+            value={form.date}
+            // onChange={(date) => setStartDate(date)}
+            onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+            placeholder="Select Date"
+            showTime={false}
+            dateFormat="dd/MM/yyyy"
+          />
             </div>
     
             <div className="flex flex-col gap-1 w-[230px]">

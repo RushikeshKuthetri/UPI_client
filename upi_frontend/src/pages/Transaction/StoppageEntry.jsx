@@ -1,22 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FormLabel from '../../components/Common/Form/InputLabel'
 import SelectInput from '../../components/Common/Form/SelectInput'
 import SubmitButton from '../../components/Common/Form/SubmitButton'
-import { Check, ClockFading, Merge, RefreshCcw, SendHorizontal, Split, SquarePen, TableProperties ,Undo2,Upload, X} from 'lucide-react'
+import { Check, ClockFading, Merge, RefreshCcw, SendHorizontal, Split, SquarePen, TableProperties, Undo2, Upload, X } from 'lucide-react'
 import IconButton from '../../components/Common/Form/IconButton'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import TextInput from '../../components/Common/Form/TextInput'
-
-const PLANT_OPTIONS = [
-  { label: 'Plant A', value: 'plant_a' },
-  { label: 'Plant B', value: 'plant_b' },
-]
-
-const LINE_OPTIONS = [
-  { label: 'Line 1', value: 'line_1' },
-  { label: 'Line 2', value: 'line_2' },
-]
+import DateTimePicker from '../../components/Common/Form/DatePicker'
+import { getAPI } from '../../utils/api'
 
 const MOCK_DATA = Array.from({ length: 8 }, (_, i) => ({
   id: i + 1,
@@ -34,156 +26,215 @@ const MOCK_DATA = Array.from({ length: 8 }, (_, i) => ({
 }))
 
 const StoppageEntry = () => {
+  const [plantOptions, setPlantOptions] = useState([])
+  const [lineOptions, setLineOptions] = useState([])
   const [form, setForm] = useState({
     date: '',
     plant: '',
     line: '',
   })
 
-const [tableData, setTableData] = useState(MOCK_DATA)
-const [editingId, setEditingId] = useState(null)
-const [editForm, setEditForm] = useState({})
+  const [tableData, setTableData] = useState(MOCK_DATA)
+  const [editingId, setEditingId] = useState(null)
+  const [editForm, setEditForm] = useState({})
 
-const inlineInput = (field, placeholder) => (value, row) => {
-  if (editingId === row.id) {
-    return (
-      <input
-        value={editForm[field] ?? ''}
-        onChange={handleEditChange(field)}
-        placeholder={placeholder}
-        className="px-1 py-0.5 rounded text-[12px] outline-none border"
-        style={{
-          background: 'var(--input-enable-bg)',
-          border: '1px solid var(--input-enable-border)',
-          color: 'var(--picker-text)',
-          width: '60px',       // 👈 fixed width instead of minWidth
-        }}
-      />
-    )
+  const inlineInput = (field, placeholder) => (value, row) => {
+    if (editingId === row.id) {
+      return (
+        <input
+          value={editForm[field] ?? ''}
+          onChange={handleEditChange(field)}
+          placeholder={placeholder}
+          className="px-1 py-0.5 rounded text-[12px] outline-none border"
+          style={{
+            background: 'var(--input-enable-bg)',
+            border: '1px solid var(--input-enable-border)',
+            color: 'var(--picker-text)',
+            width: '60px',       // 👈 fixed width instead of minWidth
+          }}
+        />
+      )
+    }
+    return <span>{value || '—'}</span>
   }
-  return <span>{value || '—'}</span>
-}
 
-const inlineSelect = (field, options, placeholder) => (value, row) => {
-  if (editingId === row.id) {
-    return (
-      <select
-        value={editForm[field] ?? ''}
-        onChange={handleEditChange(field)}
-        className="px-1 py-0.5 rounded text-[12px] outline-none border"
-        style={{
-          background: 'var(--input-enable-bg)',
-          border: '1px solid var(--input-enable-border)',
-          color: 'var(--picker-text)',
-          width: '75px',       // 👈 fixed width
-        }}
-      >
-        <option value="">{placeholder}</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-      </select>
-    )
+  const inlineSelect = (field, options, placeholder) => (value, row) => {
+    if (editingId === row.id) {
+      return (
+        <select
+          value={editForm[field] ?? ''}
+          onChange={handleEditChange(field)}
+          className="px-1 py-0.5 rounded text-[12px] outline-none border"
+          style={{
+            background: 'var(--input-enable-bg)',
+            border: '1px solid var(--input-enable-border)',
+            color: 'var(--picker-text)',
+            width: '75px',       // 👈 fixed width
+          }}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      )
+    }
+    return <span>{value || '—'}</span>
   }
-  return <span>{value || '—'}</span>
-}
 
-// dummy options
-const TYPE_OPTIONS = [{ label: 'Type A', value: 'type_a' }]
-const REASON_OPTIONS = [{ label: 'GM02', value: 'gm02' }]
-const DEPT_OPTIONS = [{ label: 'Dept 1', value: 'dept_1' }]
-const EQUIP_OPTIONS = [{ label: 'Equip 1', value: 'equip_1' }]
+  // dummy options
+  const TYPE_OPTIONS = [{ label: 'Type A', value: 'type_a' }]
+  const REASON_OPTIONS = [{ label: 'GM02', value: 'gm02' }]
+  const DEPT_OPTIONS = [{ label: 'Dept 1', value: 'dept_1' }]
+  const EQUIP_OPTIONS = [{ label: 'Equip 1', value: 'equip_1' }]
 
-const columns = [
-  { key: 'resource', label: 'Resource' },
-  { key: 'stopTime', label: 'Stop Time', render: inlineInput('stopTime', 'Stop Time') },
-  { key: 'startTime', label: 'Start Time', render: inlineInput('startTime', 'Start Time') },
-  { key: 'duration', label: 'Duration' },
-  { key: 'material', label: 'Material', render: inlineInput('material', 'Material') },
-  { key: 'type', label: 'Type', render: inlineSelect('type', TYPE_OPTIONS, 'Type') },
-  { key: 'reason', label: 'Reason', render: inlineSelect('reason', REASON_OPTIONS, 'Reason') },
-  { key: 'department', label: 'Department', render: inlineSelect('department', DEPT_OPTIONS, 'Depart..') },
-  { key: 'equipment', label: 'Equipment', render: inlineSelect('equipment', EQUIP_OPTIONS, 'Equipme..') },
-  { key: 'remarks', label: 'Remarks', render: inlineInput('remarks', 'Remarks') },
-  {
-    key: 'action',
-    label: 'Action',
-    render: (_, row) => {
-      if (editingId === row.id) {
+  const columns = [
+    { key: 'resource', label: 'Resource' },
+    { key: 'stopTime', label: 'Stop Time', render: inlineInput('stopTime', 'Stop Time') },
+    { key: 'startTime', label: 'Start Time', render: inlineInput('startTime', 'Start Time') },
+    { key: 'duration', label: 'Duration' },
+    { key: 'material', label: 'Material', render: inlineInput('material', 'Material') },
+    { key: 'type', label: 'Type', render: inlineSelect('type', TYPE_OPTIONS, 'Type') },
+    { key: 'reason', label: 'Reason', render: inlineSelect('reason', REASON_OPTIONS, 'Reason') },
+    { key: 'department', label: 'Department', render: inlineSelect('department', DEPT_OPTIONS, 'Depart..') },
+    { key: 'equipment', label: 'Equipment', render: inlineSelect('equipment', EQUIP_OPTIONS, 'Equipme..') },
+    { key: 'remarks', label: 'Remarks', render: inlineInput('remarks', 'Remarks') },
+    {
+      key: 'action',
+      label: 'Action',
+      render: (_, row) => {
+        if (editingId === row.id) {
+          return (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleEditSave}
+                className="transition hover:opacity-70"
+                style={{ color: '#22c55e' }}
+              >
+                <Check size={15} strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={handleEditCancel}
+                className="transition hover:opacity-70"
+                style={{ color: '#ef4444' }}
+              >
+                <X size={15} strokeWidth={2.5} />
+              </button>
+            </div>
+          )
+        }
         return (
           <div className="flex items-center gap-2">
             <button
-              onClick={handleEditSave}
+              onClick={() => handleEditClick(row)}
               className="transition hover:opacity-70"
-              style={{ color: '#22c55e' }}
+              style={{ color: '#8A38F5' }}
             >
-              <Check size={15} strokeWidth={2.5} />
+              <SquarePen size={15} strokeWidth={2.5} />
             </button>
             <button
-              onClick={handleEditCancel}
               className="transition hover:opacity-70"
-              style={{ color: '#ef4444' }}
+              style={{ color: '#14B8A6' }}
             >
-              <X size={15} strokeWidth={2.5} />
+              <Undo2 size={15} strokeWidth={2.5} />
             </button>
           </div>
         )
-      }
-      return (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleEditClick(row)}
-            className="transition hover:opacity-70"
-            style={{ color: '#8A38F5' }}
-          >
-            <SquarePen size={15} strokeWidth={2.5} />
-          </button>
-          <button
-            className="transition hover:opacity-70"
-            style={{ color: '#14B8A6' }}
-          >
-            <Undo2 size={15} strokeWidth={2.5} />
-          </button>
-        </div>
-      )
+      },
     },
-  },
-  {
-    key: 'sapStatus',
-    label: 'SAP Status',
-    render: (value) => (
-      <span className="text-sm" style={{ color: 'var(--text-color)' }}>
-        {value || '—'}
-      </span>
-    ),
-  },
-]
+    {
+      key: 'sapStatus',
+      label: 'SAP Status',
+      render: (value) => (
+        <span className="text-sm" style={{ color: 'var(--text-color)' }}>
+          {value || '—'}
+        </span>
+      ),
+    },
+  ]
 
-const handleEditClick = (row) => {
-  setEditingId(row.id)
-  setEditForm({ ...row })
-}
+  const handleEditClick = (row) => {
+    setEditingId(row.id)
+    setEditForm({ ...row })
+  }
 
-const handleEditSave = () => {
-  setTableData((prev) =>
-    prev.map((row) => (row.id === editingId ? { ...editForm } : row))
-  )
-  setEditingId(null)
-  setEditForm({})
-}
+  const handleEditSave = () => {
+    setTableData((prev) =>
+      prev.map((row) => (row.id === editingId ? { ...editForm } : row))
+    )
+    setEditingId(null)
+    setEditForm({})
+  }
 
-const handleEditCancel = () => {
-  setEditingId(null)
-  setEditForm({})
-}
+  const handleEditCancel = () => {
+    setEditingId(null)
+    setEditForm({})
+  }
 
-const handleEditChange = (field) => (e) =>
-  setEditForm((prev) => ({ ...prev, [field]: e.target.value }))
+  const handleEditChange = (field) => (e) =>
+    setEditForm((prev) => ({ ...prev, [field]: e.target.value }))
 
   const handleSelect = (name) => (e) =>
     setForm((prev) => ({ ...prev, [name]: e.target.value }))
 
-  const handleReset = () => setForm({ date: '', plant: '', line: '' })
+  const fetchPlants = async () => {
+    try {
+      const response = await getAPI('/unit/getUnits');
+      const formattedPlants = response.data.map((item) => ({
+        label: item.UnitName,
+        value: item.PlantCode, // P001
+        unitId: item.Id, // for line API
+      }));
+      setPlantOptions(formattedPlants);
+    } catch (error) {
+      console.error('Error fetching plants:', error);
+    }
+  };
+
+  const fetchLines = async (unitId) => {
+    try {
+      if (!unitId) {
+        setLineOptions([]);
+        return;
+      }
+      const response = await getAPI(`/line/unit/${unitId}`);
+      const formattedLines = response.data.map((item) => ({
+        label: item.LineName,
+        value: item.LineCode,
+      }));
+      setLineOptions(formattedLines);
+    } catch (error) {
+      console.error("Error fetching lines:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlants();
+  }, []);
+
+  const handlePlantChange = async (e) => {
+    const plantCode = e.target.value;
+    const selectedPlant = plantOptions.find(
+      (item) => item.value === plantCode
+    );
+
+    setForm((prev) => ({
+      ...prev,
+      plant: plantCode,
+      line: "",
+    }));
+
+    if (selectedPlant?.unitId) {
+      await fetchLines(selectedPlant.unitId);
+    } else {
+      setLineOptions([]);
+    }
+  };
+
+  const handleReset = () => {
+    setForm({ date: '', plant: '', line: '' })
+    setLineOptions([])
+  }
 
   const handleSubmit = () => console.log('Submitted:', form)
 
@@ -201,21 +252,21 @@ const handleEditChange = (field) => (e) =>
       <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Date</FormLabel>
-          <TextInput
-              name="date"
-              value={form.date}
-            //   onChange={handleChange}
-              placeholder="dd/mm/yyyy"
-              type="date"
-            />
+          <DateTimePicker
+            value={form.date}
+            onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+            placeholder="Select Date"
+            showTime={false}
+            dateFormat="dd/MM/yyyy"
+          />
         </div>
 
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Plant Name</FormLabel>
           <SelectInput
-            options={PLANT_OPTIONS}
+            options={plantOptions}
             value={form.plant}
-            onChange={handleSelect('plant')}
+            onChange={handlePlantChange}
             placeholder="Select Plant"
           />
         </div>
@@ -223,7 +274,7 @@ const handleEditChange = (field) => (e) =>
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Line</FormLabel>
           <SelectInput
-            options={LINE_OPTIONS}
+            options={lineOptions}
             value={form.line}
             onChange={handleSelect('line')}
             placeholder="Select Line"
@@ -247,7 +298,7 @@ const handleEditChange = (field) => (e) =>
         </div>
       </div>
 
-       <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex my-2 items-center justify-start gap-2">
           <button
             className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white transition hover:opacity-90"
@@ -262,21 +313,21 @@ const handleEditChange = (field) => (e) =>
         </div>
 
         {/* Icon buttons with tooltips */}
-     <div className="flex my-2 items-center justify-end gap-4 mr-10">
+        <div className="flex my-2 items-center justify-end gap-4 mr-10">
           <IconButton icon={Upload} tooltip="Upload" />
-            <IconButton icon={TableProperties} tooltip="Excel Template" />
-       
-        
+          <IconButton icon={TableProperties} tooltip="Excel Template" />
+
+
         </div>
-        
+
       </div>
       <div className="overflow-x-auto w-full mt-1 mb-8">
-  <Table1
-    columns={columns}
-    data={tableData}
-  />
-  <Pagination/>
-</div>
+        <Table1
+          columns={columns}
+          data={tableData}
+        />
+        <Pagination />
+      </div>
 
     </div>
   )

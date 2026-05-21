@@ -7,6 +7,7 @@ import Table1 from '../../components/Common/Table/Table';
 import Pagination from '../../components/Common/Pagination/Pagination';
 import { RefreshCcw, Plus } from 'lucide-react';
 import AddNewModal from '../../components/Common/Modals/AddNewModal';
+import DateTimePicker from '../../components/Common/Form/DatePicker';
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -79,20 +80,13 @@ const StoppageAlert = () => {
 
         <div className="flex flex-col gap-1 w-[230px]">
           <FormLabel required>Select Date</FormLabel>
-          <input
-            type="date"
+          <DateTimePicker
             value={form.date}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, date: e.target.value }))
-            }
-            className="px-3 py-[5px] rounded-lg text-[13px] outline-none transition w-full"
-            style={{
-              background: 'var(--input-enable-bg)',
-              border: '1px solid var(--input-enable-border)',
-              color: form.date
-                ? 'var(--picker-text)'
-                : 'var(--search-placeholder)',
-            }}
+            // onChange={(date) => setStartDate(date)}
+            onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+            placeholder="Select Date"
+            showTime={false}
+            dateFormat="dd/MM/yyyy"
           />
         </div>
 
