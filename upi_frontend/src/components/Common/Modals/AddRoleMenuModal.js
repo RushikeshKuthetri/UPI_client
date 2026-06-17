@@ -4,6 +4,8 @@ import FormLabel from '../Form/InputLabel'
 import TextInput from '../Form/TextInput'
 import SelectInput from '../Form/SelectInput'
 import SubmitButton from '../Form/SubmitButton'
+import NextButton from '../Form/NextButton'
+import BackButton from '../Form/BackButton'
 
 const MENU_OPTIONS = [
   { label: 'Grade Change', value: 'grade_change' },
@@ -28,6 +30,10 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
   }
 
   const handleSave = () => {
+    if (!form.roleName || !form.menuId) {
+      alert('Please fill in all required fields.')
+      return
+    }
     onSave?.(form)
     onClose()
   }
@@ -83,18 +89,8 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3 mt-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-lg text-sm font-medium transition hover:opacity-80"
-            style={{
-              border: '1.5px solid var(--button-border)',
-              background: 'var(--button-bg)',
-              color: 'var(--text-color)',
-            }}
-          >
-            Close
-          </button>
-          <SubmitButton onClick={handleSave} />
+          <BackButton onClick={onClose} label="Close"/>
+          <NextButton onClick={handleSave} label="Save"/>
         </div>
       </div>
     </div>

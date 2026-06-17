@@ -25,6 +25,9 @@ const RoleMenuMapping = () => {
       row.menus.toLowerCase().includes(search.toLowerCase())
   )
 
+
+
+
   const columns = [
     { key: 'srNo', label: 'Sr No.' },
     { key: 'role', label: 'Role' },

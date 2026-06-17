@@ -8,6 +8,9 @@ import IconButton from '../../components/Common/Form/IconButton'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import DateTimePicker from '../../components/Common/Form/DatePicker'
+import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import ResetButton from '../../components/Common/Form/ResetButton'
+import ActionButton from '../../components/Common/Form/ActionButton'
 
 const PLANT_OPTIONS = [
     { label: 'Plant A', value: 'plant_a' },
@@ -21,6 +24,7 @@ const LINE_OPTIONS = [
 
 const MOCK_DATA = Array.from({ length: 8 }, (_, i) => ({
     id: i + 1,
+    selected: false,
     meterId: 'AC00001',
     description: 'LS CRUSHER (MAIN DRIVE)',
     meterNumber: 'CRMCC',
@@ -39,9 +43,19 @@ const MeterReading = () => {
         endTime: '',
     })
 
-    const [tableData, setTableData] = useState(MOCK_DATA)
+    const [tableData, setTableData] = useState([])
+    const [showTable, setShowTable] = useState(false)
+
+    const toggleSelect = (id) => {
+        setTableData((prev) =>
+            prev.map((row) =>
+                row.id === id ? { ...row, selected: !row.selected } : row
+            )
+        );
+    };
 
     const columns = [
+      
         { key: 'meterId', label: 'Meter ID' },
         { key: 'description', label: 'Description' },
         { key: 'meterNumber', label: 'Meter Number' },
@@ -73,10 +87,17 @@ const MeterReading = () => {
     const handleSelect = (name) => (e) =>
         setForm((prev) => ({ ...prev, [name]: e.target.value }))
 
-    const handleReset = () =>
+    const handleReset = () => {
         setForm({ date: '', plant: '', line: '', startTime: '', endTime: '' })
+        setTableData([])
+        setShowTable(false)
+    }
 
-    const handleSubmit = () => console.log('Submitted:', form)
+    const handleSubmit = () => {
+        console.log('Submitted:', form)
+        setTableData(MOCK_DATA)
+        setShowTable(true)
+    }
     return (
         <div className="w-full h-full">
             <div className="flex justify-between items-center mb-3">
@@ -119,53 +140,34 @@ const MeterReading = () => {
                 </div>
 
                 <div className="flex items-center gap-2 pb-[2px]">
-                    <button
-                        onClick={handleReset}
-                        className="flex items-center gap-1.5 px-4 py-[6px] rounded-lg text-sm font-medium transition hover:opacity-80"
-                        style={{
-                            border: '1.5px solid var(--button-border)',
-                            background: 'var(--button-bg)',
-                            color: 'var(--text-color)',
-                        }}
-                    >
-                        <RefreshCcw size={14} />
-                        Reset
-                    </button>
+                    <ResetButton onClick={handleReset} />
                     <SubmitButton onClick={handleSubmit} />
                 </div>
             </div>
-            <div className="flex items-center justify-between">
-                <div className="flex my-2 items-center justify-start gap-2">
-                    <button
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white transition hover:opacity-90"
-                        style={{ background: 'var(--submit-button-bg)' }}
-                    >
-                        <SendHorizontal size={14} />
-                        Send to SAP
-                    </button>
-                    <label className="text-[var(--text-color)] text-sm font-medium">
-                        2 items selected
-                    </label>
-                </div>
+            {showTable && (
+                <>
+                    <div className="flex items-center justify-between">
+                        <div className="flex my-2 items-center justify-start gap-2">
+                            <ActionButton icon={SendHorizontal} label="Send to SAP" onClick={() => alert("Send to SAP clicked")} />
+                        </div>
 
-                {/* Icon buttons with tooltips */}
-                <div className="flex my-2 items-center justify-end gap-4 mr-10">
-                    <IconButton icon={PersonStanding} tooltip="Run of Job" />
-                    <IconButton icon={Sigma} tooltip="Run Calculation" />
+                        {/* Icon buttons with tooltips */}
+                        <div className="flex my-2 items-center justify-end gap-4 mr-10">
+                            <IconButton icon={PersonStanding} tooltip="Run of Job" />
+                            <IconButton icon={Sigma} tooltip="Run Calculation" />
+                        </div>
 
-
-                </div>
-
-
-            </div>
-            {/* Table */}
-            <div className="overflow-x-auto w-full mt-1">
-                <Table1
-                    columns={columns}
-                    data={tableData}
-                />
-                <Pagination />
-            </div>
+                    </div>
+                    {/* Table */}
+                    <div className="overflow-x-auto w-full mt-1">
+                        <Table1
+                            columns={columns}
+                            data={tableData}
+                        />
+                        <Pagination />
+                    </div>
+                </>
+            )}
 
         </div>
     )

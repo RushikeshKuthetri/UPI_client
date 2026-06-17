@@ -7,13 +7,14 @@ const NextButton = ({ onClick, label = "Next Stage", disabled = false, }) => (
       disabled={disabled}
       className={`
   border border-[var(--button-border)]
-  bg-[var(--button-bg)]
+  bg-[var(--submit-button-bg)]
+  text-[#111111] 
   text-[14px]
   font-medium
-  px-2 py-1
+  px-3  py-1
   rounded-lg
   transition cursor-pointer
-  hover:bg-[var(--button-hover-bg)]
+hover:bg-[var(--submit-button-hover-bg)]
 `}
 
     >

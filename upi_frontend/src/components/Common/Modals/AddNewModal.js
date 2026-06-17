@@ -3,16 +3,26 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import FormLabel from '../Form/InputLabel';
 import SelectInput from '../Form/SelectInput';
-import TimeRangeInput from '../Form/TimeRangeInput';
 import DaysTimeInput from '../Form/DaysTimeInput';
+import DateTimePicker from '../Form/DatePicker';
+import TextInput from '../Form/TextInput';
+import SingleTimeInput from '../Form/SingleTimeInput';
+import NextButton from '../Form/NextButton';
+import BackButton from '../Form/BackButton';
 
 const AddNewModal = ({ isOpen, onClose }) => {
 
- 
   const [timeRange, setTimeRange] = useState({
     from: '',
     to: '',
   });
+
+  const [stopDate, setStopDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+
+  const [reason, setReason] = useState('');
+  const [rootCause, setRootCause] = useState('');
 
   const [downtime, setDowntime] = useState({
     days: '',
@@ -24,7 +34,41 @@ const AddNewModal = ({ isOpen, onClose }) => {
     time: '',
   });
 
-  
+  const [line, setLine] = useState('');
+  const [resource, setResource] = useState('');
+  const [stoppageType, setStoppageType] = useState('');
+  const [impact, setImpact] = useState('');
+  const [stockPosition, setStockPosition] = useState('');
+
+  const [errors, setErrors] = useState({});
+
+  const handleSave = () => {
+    const newErrors = {};
+
+    if (!line) newErrors.line = "Line is required";
+    if (!resource) newErrors.resource = "Resource is required";
+    if (!stopDate) newErrors.stopDate = "Stop date is required";
+    if (!timeRange.from) newErrors.timeRangeFrom = "Start time is required";
+    if (!timeRange.to) newErrors.timeRangeTo = "End time is required";
+    if (!stoppageType) newErrors.stoppageType = "Stoppage type is required";
+    if (!impact) newErrors.impact = "Impact is required";
+    if (!downtime.days || !downtime.time) newErrors.downtime = "Expected downtime is required";
+    if (!stockPosition) newErrors.stockPosition = "Stock position is required";
+    if (!reason.trim()) newErrors.reason = "Reason for stoppage is required";
+
+    if (!startDate) newErrors.startDate = "Start date is required";
+    if (!startTime) newErrors.startTime = "Start time is required";
+    if (!startDowntime.days || !startDowntime.time) newErrors.startDowntime = "Expected downtime is required";
+    if (!rootCause.trim()) newErrors.rootCause = "Root cause is required";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Validation passed! Saving data...");
+      // Add save API call here
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -54,7 +98,7 @@ const AddNewModal = ({ isOpen, onClose }) => {
         </h2>
 
         {/* Stop Info */}
-        <h3 className="text-[14px] font-semibold mb-2 text-orange-600">
+        <h3 className="text-[14px] font-semibold mb-2 " style={{ color: 'var(--title)' }}>
           Stop Information :
         </h3>
 
@@ -62,81 +106,124 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Line</FormLabel>
-            <SelectInput placeholder="Select Line" />
+            <SelectInput 
+              placeholder="Select Line" 
+              value={line} 
+              onChange={(e) => setLine(e.target.value)} 
+              error={errors.line} 
+            />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Resource</FormLabel>
-            <SelectInput placeholder="Select Resource" />
+            <SelectInput 
+              placeholder="Select Resource" 
+              value={resource} 
+              onChange={(e) => setResource(e.target.value)} 
+              error={errors.resource} 
+            />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Stop Date</FormLabel>
-            <input
-              type="date"
-              className="w-full px-3 py-[5px] rounded-lg text-[13px]"
-              style={{
-                background: 'var(--input-enable-bg)',
-                border: '1px solid var(--input-enable-border)',
-              }}
+            <DateTimePicker
+              value={stopDate}
+              onChange={setStopDate}
+              showTime={false}
+              placeholder="dd/MM/yyyy"
+              error={errors.stopDate}
             />
           </div>
 
-          <div className="flex flex-col gap-1 col-span-2">
-            <TimeRangeInput
-              fromValue={timeRange.from}
-              toValue={timeRange.to}
-              onFromChange={(val) =>
+          <div className="flex flex-col gap-1">
+            <FormLabel required>Start Time</FormLabel>
+            <SingleTimeInput
+              value={timeRange.from}
+              onChange={(val) =>
                 setTimeRange((prev) => ({ ...prev, from: val }))
               }
-              onToChange={(val) =>
+              error={errors.timeRangeFrom}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <FormLabel required>End Time</FormLabel>
+            <SingleTimeInput
+              value={timeRange.to}
+              onChange={(val) =>
                 setTimeRange((prev) => ({ ...prev, to: val }))
               }
+              error={errors.timeRangeTo}
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Stoppage Type</FormLabel>
-            <SelectInput placeholder="Select Stoppage Type" />
+            <SelectInput 
+              placeholder="Select Stoppage Type" 
+              value={stoppageType} 
+              onChange={(e) => setStoppageType(e.target.value)} 
+              error={errors.stoppageType} 
+            />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Impact on Dispatch</FormLabel>
-            <SelectInput placeholder="Select Impact in Dispatch" />
+            <SelectInput 
+              placeholder="Select Impact in Dispatch" 
+              value={impact} 
+              onChange={(e) => setImpact(e.target.value)} 
+              error={errors.impact} 
+            />
           </div>
 
           <div className="flex flex-col gap-1">
+            <FormLabel required>Expected Downtime</FormLabel>
             <DaysTimeInput
-              label="Expected Downtime"
-              required
               value={downtime}
               onChange={setDowntime}
+              error={errors.downtime}
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Stock Position</FormLabel>
-            <SelectInput placeholder="Select Stock Position" />
+            <SelectInput 
+              placeholder="Select Stock Position" 
+              value={stockPosition} 
+              onChange={(e) => setStockPosition(e.target.value)} 
+              error={errors.stockPosition} 
+            />
           </div>
         </div>
 
         {/* Reason */}
         <div className="mb-4">
           <FormLabel required>Reason for Stoppage</FormLabel>
-          <textarea
-            rows={3}
-            placeholder="Enter Reason for Stoppage..."
-            className="w-full px-3 py-2 rounded-lg text-[13px]"
-            style={{
-              background: 'var(--input-enable-bg)',
-              border: '1px solid var(--input-enable-border)',
-            }}
-          />
-          <div className="text-right text-xs mt-1 text-gray-400">0 / 10</div>
+          <div className="relative">
+            <TextInput
+              rows={3}
+              value={reason}
+              onChange={(e) => {
+                if (e.target.value.length <= 1000) {
+                  setReason(e.target.value);
+                  if (errors.reason) setErrors(prev => ({ ...prev, reason: null }));
+                }
+              }}
+              placeholder="Enter Reason for Stoppage..."
+              error={errors.reason}
+            />
+            <span
+              className="absolute bottom-2 right-3 text-[11px]"
+              style={{ color: 'var(--search-placeholder)' }}
+            >
+              {reason.length} / 1000
+            </span>
+          </div>
         </div>
 
         {/* Start Info */}
-        <h3 className="text-[14px] font-semibold mb-2 text-orange-600">
+        <h3 className="text-[14px] font-semibold mb-2" style={{ color: 'var(--title)' }}>
           Start Information :
         </h3>
 
@@ -144,34 +231,30 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Start Date</FormLabel>
-            <input
-              type="date"
-              className="w-full px-3 py-[5px] rounded-lg text-[13px]"
-              style={{
-                background: 'var(--input-enable-bg)',
-                border: '1px solid var(--input-enable-border)',
-              }}
+            <DateTimePicker
+              value={startDate}
+              onChange={setStartDate}
+              showTime={false}
+              placeholder="dd/MM/yyyy"
+              error={errors.startDate}
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Start Time</FormLabel>
-            <input
-              type="time"
-              className="w-full px-3 py-[5px] rounded-lg text-[13px]"
-              style={{
-                background: 'var(--input-enable-bg)',
-                border: '1px solid var(--input-enable-border)',
-              }}
+            <SingleTimeInput
+              value={startTime}
+              onChange={setStartTime}
+              error={errors.startTime}
             />
           </div>
 
           <div className="flex flex-col gap-1">
+            <FormLabel required>Expected Downtime</FormLabel>
             <DaysTimeInput
-              label="Expected Downtime"
-              required
               value={startDowntime}
               onChange={setStartDowntime}
+              error={errors.startDowntime}
             />
           </div>
         </div>
@@ -179,38 +262,32 @@ const AddNewModal = ({ isOpen, onClose }) => {
         {/* Root Cause */}
         <div className="mb-5">
           <FormLabel required>Root Cause for Stoppage</FormLabel>
-          <textarea
-            rows={3}
-            placeholder="Root Cause for Stoppage..."
-            className="w-full px-3 py-2 rounded-lg text-[13px]"
-            style={{
-              background: 'var(--input-enable-bg)',
-              border: '1px solid var(--input-enable-border)',
-            }}
-          />
-          <div className="text-right text-xs mt-1 text-gray-400">0 / 10</div>
+          <div className="relative">
+            <TextInput
+              rows={3}
+              value={rootCause}
+              onChange={(e) => {
+                if (e.target.value.length <= 1000) {
+                  setRootCause(e.target.value);
+                  if (errors.rootCause) setErrors(prev => ({ ...prev, rootCause: null }));
+                }
+              }}
+              placeholder="Root Cause for Stoppage..."
+              error={errors.rootCause}
+            />
+            <span
+              className="absolute bottom-2 right-3 text-[11px]"
+              style={{ color: 'var(--search-placeholder)' }}
+            >
+              {rootCause.length} / 1000
+            </span>
+          </div>
         </div>
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-lg text-sm font-medium"
-            style={{
-              border: '1.5px solid var(--button-border)',
-              background: 'var(--button-bg)',
-              color: 'var(--text-color)',
-            }}
-          >
-            Close
-          </button>
-
-          <button
-            className="px-5 py-1.5 rounded-lg text-sm font-medium text-white"
-            style={{ background: 'var(--submit-button-bg)' }}
-          >
-            Save
-          </button>
+          <BackButton onClick={onClose} label="Close"/>
+          <NextButton onClick={handleSave} label="Save" />
         </div>
       </div>
     </div>

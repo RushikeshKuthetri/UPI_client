@@ -8,6 +8,8 @@ import Pagination from '../../components/Common/Pagination/Pagination';
 import { RefreshCcw, Plus } from 'lucide-react';
 import AddNewModal from '../../components/Common/Modals/AddNewModal';
 import DateTimePicker from '../../components/Common/Form/DatePicker';
+import ResetButton from '../../components/Common/Form/ResetButton';
+import ActionButton from '../../components/Common/Form/ActionButton';
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -61,6 +63,10 @@ const StoppageAlert = () => {
   };
 
   const handleSubmit = () => {
+    if (!form.date || !form.plant || !form.line) {
+      alert('Please fill in all required fields (Date, Plant Name, and Line)');
+      return;
+    }
     setTableData(MOCK_DATA);
     setShowTable(true);
   };
@@ -111,19 +117,7 @@ const StoppageAlert = () => {
         </div>
 
         <div className="flex items-center gap-2 pb-[2px]">
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-1.5 px-4 py-[6px] rounded-lg text-sm font-medium transition hover:opacity-80"
-            style={{
-              border: '1.5px solid var(--button-border)',
-              background: 'var(--button-bg)',
-              color: 'var(--text-color)',
-            }}
-          >
-            <RefreshCcw size={14} />
-            Reset
-          </button>
-
+          <ResetButton onClick={handleReset} />
           <SubmitButton onClick={handleSubmit} />
         </div>
       </div>
@@ -132,18 +126,8 @@ const StoppageAlert = () => {
       {showTable && (
         <>
           <div className="flex my-2 items-center justify-start gap-2">
-            <button
-              onClick={() => setIsModalOpen(true)} // ✅ added
-              className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white transition hover:opacity-90"
-              style={{ background: 'var(--submit-button-bg)' }}
-            >
-              <Plus size={14} />
-              Add New
-            </button>
+            <ActionButton icon={Plus} label="Add New" onClick={() => setIsModalOpen(true)} />
 
-            <label className="text-[var(--text-color)] text-sm font-medium">
-              2 items selected
-            </label>
           </div>
 
           <div className="overflow-x-auto w-full mt-2">

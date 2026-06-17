@@ -26,8 +26,8 @@ const DateTimePicker = ({
     <div className="relative w-full">
       <div
         className={`
-          w-full h-[36px] rounded-lg border
-          border-[var(--input-enable-border)]
+          w-full h-[36px] rounded-lg !border
+          !border-[var(--input-enable-border)]
           bg-[var(--input-enable-bg)]
           px-2 flex items-center relative
           ${

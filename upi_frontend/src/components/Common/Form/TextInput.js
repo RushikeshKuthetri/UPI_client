@@ -1,8 +1,11 @@
 
 import { CalendarDays, Clock, Eye, EyeOff } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TextInput = ({
+  name,
   value,
   onChange,
   error,
@@ -76,121 +79,109 @@ const TextInput = ({
   }
 };
 
+  const handleDateChange = (date) => {
+    if (onChange) {
+      if (!date) {
+        onChange({ target: { name, value: "" } });
+        return;
+      }
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`;
+      onChange({ target: { name, value: dateString } });
+    }
+  };
+
+  const parsedDate = value ? new Date(value) : null;
+
   return (
 
     <div className="relative w-full">
       {rows === 1 ? (
         <>
+          {isDate ? (
+            <div className="relative w-full h-[36px]">
+              <DatePicker
+                selected={parsedDate}
+                onChange={handleDateChange}
+                disabled={disabled}
+                placeholderText={placeholder || "dd/MM/yyyy"}
+                wrapperClassName="w-full h-full"
+                className={`w-full h-full p-1 py-2 cursor-pointer rounded-lg !text-[13px] !border !border-[var(--input-enable-border)] text-[var(--picker-text)] focus:outline-none focus:ring-[0.2px] focus:ring-[#767575] placeholder:text-[12px] placeholder:text-[var(--search-placeholder)] pl-2 bg-[var(--input-enable-bg)] transition-all duration-200 ${disabled ? "bg-[var(--input-disable-bg)] cursor-not-allowed" : "bg-[var(--input-enable-bg)]"} pr-10`}
+                dateFormat="dd/MM/yyyy"
+                name={name}
+                id={inputId}
+              />
+              <CalendarDays
+                size={18}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
+            </div>
+          ) : (
+            <>
+              <input
+                ref={inputRef}
+                disabled={disabled}
+                id={inputId}
+                type={inputType}
+                name={name}
+                value={value}
+                placeholder={placeholder}
+                onChange={onChange}
+                onKeyDown={handleKeyDown}
+                style={
+                  isTime
+                    ? { colorScheme: "light dark" }
+                    : undefined
+                }
+                className={`w-full p-1 py-2 rounded-lg !text-[13px] !border !border-[var(--input-enable-border)] text-[var(--picker-text)] focus:outline-none focus:ring-[0.2px] focus:ring-[#767575] placeholder:text-[12px] placeholder:text-[var(--search-placeholder)] pl-2 bg-[var(--input-enable-bg)] transition-all duration-200
+                  ${disabled ? "bg-[var(--input-disable-bg)] cursor-not-allowed" : "bg-[var(--input-enable-bg)]"}
+                  ${hasRightIcon ? "pr-10" : ""}
+                  ${isPassword ? "no-password-toggle" : ""}
+                `}
+              />
 
-          {/* <input
-            ref={inputRef}
-            disabled={disabled}
-            id={inputId}
-            type={inputType}
-            value={value}
-            placeholder={placeholder}
-            onChange={onChange}
-            style={
-              isDate || isTime
-                ? { colorScheme: "light dark" }
-                : undefined
-            }
-            className={`w-full p-0.5 rounded-lg border
-                border-[var(--input-enable-border)]
-                text-[var(--picker-text)]
-                focus:outline-none
-                focus:ring-[0.2px] focus:ring-[#767575] 
-                placeholder:text-sm
-                placeholder:text-[var(--search-placeholder)]
-                pl-2
-                transition-all duration-200
-                ${disabled ? "bg-[var(--input-disable-bg)] cursor-not-allowed": "bg-[var(--input-enable-bg)]"}
-                ${hasRightIcon ? "pr-10" : ""}
-                ${isPassword ? "no-password-toggle" : ""}
-  `}
-          /> */}
-
-          <input
-  ref={inputRef}
-  disabled={disabled}
-  id={inputId}
-  type={inputType}
-  value={value}
-  placeholder={placeholder}
-  onChange={onChange}
-  onKeyDown={handleKeyDown}
-  style={
-    isDate || isTime
-      ? { colorScheme: "light dark" }
-      : undefined
-  }
-  className={`w-full p-1 py-2 rounded-lg !text-[13px] !border !border-[var(--input-enable-border)] text-[var(--picker-text)] focus:outline-none focus:ring-[0.2px] focus:ring-[#767575] placeholder:text-[12px] placeholder:text-[var(--search-placeholder)] pl-2 bg-[var(--input-enable-bg)] transition-all duration-200
-    ${disabled ? "bg-[var(--input-disable-bg)] cursor-not-allowed" : "bg-[var(--input-enable-bg)]"}
-    ${hasRightIcon ? "pr-10" : ""}
-    ${isPassword ? "no-password-toggle" : ""}
-  `}
-/>
-
-
-          {/* ✅ PASSWORD ICON */}
-          {isPassword && (
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-1/2 right-3 -translate-y-1/2 "
-              tabIndex={-1}
-            >
-              {showPassword ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
+              {/* ✅ PASSWORD ICON */}
+              {isPassword && (
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 "
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
               )}
-            </button>
+
+              {isTime && (
+                <Clock
+                  size={18}
+                  onClick={() => inputRef.current?.showPicker()}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 cursor-pointer"
+                />
+              )}
+            </>
           )}
-
-
-          {isDate && (
-            <CalendarDays
-              size={18}
-              onClick={() => inputRef.current?.showPicker()}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 cursor-pointer"
-            />
-          )}
-
-
-
-          {isTime && (
-            <Clock
-              size={18}
-              onClick={() => inputRef.current?.showPicker()}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 cursor-pointer"
-            />
-          )}
-
         </>
       ) : (
         <>
-          <label
-            htmlFor={inputId}
-            className={`absolute left-1 transition-all duration-200 pointer-events-none
-              ${isFocused || value
-                ? "text-xs -top-2 text-slate-300 px-1.5"
-                : "text-slate-400 top-2 px-1.5"
-              }`}
-          >
-            {placeholder}
-          </label>
-
           <textarea
             id={inputId}
+            name={name}
             value={value}
+            placeholder={placeholder}
             onChange={onChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             rows={rows}
-            className={`w-full p-1.5 rounded-lg border
-              ${error ? "border-red-500" : "border-slate-600"}
-              focus:outline-none resize-none`}
+            className={`w-full p-2 rounded-lg !text-[13px] !border !border-[var(--input-enable-border)] text-[var(--picker-text)] focus:outline-none focus:ring-[0.2px] focus:ring-[#767575] placeholder:text-[12px] placeholder:text-[var(--search-placeholder)] bg-[var(--input-enable-bg)] resize-none transition-all duration-200
+              ${error ? "!border-red-500" : ""}
+            `}
           />
         </>
       )}

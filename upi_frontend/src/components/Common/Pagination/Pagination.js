@@ -10,6 +10,8 @@ const Pagination = ({
   rowsOptions = [5, 10, 20],
   showRowsPerPage = true,
 }) => {
+  if (currentPage === undefined || totalPages === undefined) return null;
+
   const handlePrev = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);

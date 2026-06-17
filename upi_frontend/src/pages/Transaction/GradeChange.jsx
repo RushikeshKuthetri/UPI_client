@@ -10,6 +10,9 @@ import IconButton from '../../components/Common/Form/IconButton'
 import TextInput from '../../components/Common/Form/TextInput'
 import { getAPI, postAPI } from '../../utils/api'
 import DateTimePicker from '../../components/Common/Form/DatePicker'
+import UploadFileModal from '../../components/Common/Modals/UploadFileModal'
+import ActionButton from '../../components/Common/Form/ActionButton'
+import ResetButton from '../../components/Common/Form/ResetButton'
 
 
 // ── Tooltip Icon Button ──────────────────────────────────────────
@@ -44,6 +47,7 @@ const [editingRowId, setEditingRowId] =
   useState(null);
 
 const [tempReason, setTempReason] =useState("");
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [form, setForm] = useState({
     date: '',
     plant: '',
@@ -245,18 +249,8 @@ const handleReasonChange = (id, value) => {
   ]
 
   const resourceColumns = [
-    {
-      key: 'selected',
-      label: 'Select',
-      render: (value, row) => (
-        <CheckboxInput
-          checked={value}
-          onChange={() => toggleResourceSelect(row.id)}
-        />
-      ),
-    },
-    { key: 'resource', label: 'Resource' },
-    { key: 'totalDuration', label: 'Total Duration' },
+    { key: 'resource', label: 'Resource', center: true },
+    { key: 'totalDuration', label: 'Total Duration', center: true },
   ]
 
 const fetchReasons = async () => {
@@ -295,8 +289,11 @@ const fetchReasons = async () => {
   const handleSelect = (name) => (e) =>
     setForm((prev) => ({ ...prev, [name]: e.target.value }))
 
-  const handleReset = () =>
+  const handleReset = () => {
     setForm({ date: '', plant: '', line: '', startTime: '', endTime: '' })
+    setTableData([])
+    setResourceData([])
+  }
 
  const handleSubmit = async () => {
   try {
@@ -426,18 +423,7 @@ const handleEditClick = (row) => {
         </div>
 
         <div className="flex items-center gap-2 pb-[2px]">
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-1.5 px-4 py-[6px] rounded-lg text-sm font-medium transition hover:opacity-80"
-            style={{
-              border: '1.5px solid var(--button-border)',
-              background: 'var(--button-bg)',
-              color: 'var(--text-color)',
-            }}
-          >
-            <RefreshCcw size={14} />
-            Reset
-          </button>
+          <ResetButton onClick={handleReset} />
           <SubmitButton onClick={handleSubmit} />
         </div>
       </div>
@@ -445,15 +431,10 @@ const handleEditClick = (row) => {
       {/* Actions row */}
       <div className="flex items-center justify-between">
         <div className="flex my-2 items-center justify-start gap-2">
-          <button
-            className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white transition hover:opacity-90"
-            style={{ background: 'var(--submit-button-bg)' }}
-          >
-            <SendHorizontal size={14} />
-            Send to SAP
-          </button>
+          <ActionButton icon={SendHorizontal} label="Send to SAP" onClick={() => alert("Send to SAP clicked")} />
+
           <label className="text-[var(--text-color)] text-sm font-medium">
-            2 items selected
+            {tableData.filter((row) => row.selected).length} items selected
           </label>
         </div>
 
@@ -462,7 +443,7 @@ const handleEditClick = (row) => {
           <IconButton icon={ClockFading} tooltip="Shift Duration" />
           <IconButton icon={Merge} tooltip="Merge" />
           <IconButton icon={PersonStanding} tooltip="Run of Job" />
-          <IconButton icon={Upload} tooltip="Upload" />
+          <IconButton icon={Upload} tooltip="Upload" onClick={() => setIsUploadModalOpen(true)} />
           <IconButton icon={CalendarCheck} tooltip="Open Event" />
         </div>
       </div>
@@ -484,6 +465,8 @@ const handleEditClick = (row) => {
           />
         </div>
       </div>
+
+      <UploadFileModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
 
     </div>
   )

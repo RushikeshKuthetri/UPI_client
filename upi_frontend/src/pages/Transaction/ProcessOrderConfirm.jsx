@@ -7,6 +7,8 @@ import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import { Eye, RefreshCcw, SquarePen, Undo2 } from 'lucide-react'
 import DateTimePicker from '../../components/Common/Form/DatePicker'
+import PoDetailsModal from '../../components/Common/Modals/PoDetailsModal'
+import ResetButton from '../../components/Common/Form/ResetButton'
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -33,13 +35,24 @@ const MOCK_DATA = Array.from({ length: 9 }, (_, i) => ({
 
 const ProcessOrderConfirm = () => {
   const [form, setForm] = useState({ date: '', plant: '', line: '' })
-  const [tableData, setTableData] = useState(MOCK_DATA)
+  const [tableData, setTableData] = useState([])
+  const [showTable, setShowTable] = useState(false)
+  const [isPoModalOpen, setIsPoModalOpen] = useState(false)
 
   const handleSelect = (name) => (e) =>
     setForm((prev) => ({ ...prev, [name]: e.target.value }))
 
-  const handleReset = () => setForm({ date: '', plant: '', line: '' })
-  const handleSubmit = () => console.log('Submitted:', form)
+  const handleReset = () => {
+    setForm({ date: '', plant: '', line: '' })
+    setTableData([])
+    setShowTable(false)
+  }
+
+  const handleSubmit = () => {
+    console.log('Submitted:', form)
+    setTableData(MOCK_DATA)
+    setShowTable(true)
+  }
 
   const columns = [
     { key: 'resource', label: 'Resource' },
@@ -59,7 +72,7 @@ const ProcessOrderConfirm = () => {
           <button className="transition hover:opacity-70" style={{ color: '#8A38F5' }}>
             <SquarePen size={15} strokeWidth={2.5} />
           </button>
-          <button className="transition hover:opacity-70" style={{ color: '#22b8cf' }}>
+          <button className="transition hover:opacity-70" style={{ color: '#22b8cf' }} onClick={() => setIsPoModalOpen(true)}>
             <Eye size={15} strokeWidth={2.5} />
           </button>
           <button className="transition hover:opacity-70" style={{ color: 'var(--text-color)' }}>
@@ -81,10 +94,10 @@ const ProcessOrderConfirm = () => {
       </div>
 
       {/* Filter Card */}
-     <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
-            <div className="flex flex-col gap-1 w-[230px]">
-              <FormLabel required>Select Date</FormLabel>
-              <DateTimePicker
+      <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
+        <div className="flex flex-col gap-1 w-[230px]">
+          <FormLabel required>Select Date</FormLabel>
+          <DateTimePicker
             value={form.date}
             // onChange={(date) => setStartDate(date)}
             onChange={(date) => setForm((prev) => ({ ...prev, date }))}
@@ -92,57 +105,52 @@ const ProcessOrderConfirm = () => {
             showTime={false}
             dateFormat="dd/MM/yyyy"
           />
-            </div>
-    
-            <div className="flex flex-col gap-1 w-[230px]">
-              <FormLabel required>Plant Name</FormLabel>
-              <SelectInput
-                options={PLANT_OPTIONS}
-                value={form.plant}
-                onChange={handleSelect('plant')}
-                placeholder="Select Plant"
-              />
-            </div>
-    
-            <div className="flex flex-col gap-1 w-[230px]">
-              <FormLabel required>Select Line</FormLabel>
-              <SelectInput
-                options={LINE_OPTIONS}
-                value={form.line}
-                onChange={handleSelect('line')}
-                placeholder="Select Line"
-              />
-            </div>
-    
-            <div className="flex items-center gap-2 pb-[2px]">
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-1.5 px-4 py-[6px] rounded-lg text-sm font-medium transition hover:opacity-80"
-                style={{
-                  border: '1.5px solid var(--button-border)',
-                  background: 'var(--button-bg)',
-                  color: 'var(--text-color)',
-                }}
-              >
-                <RefreshCcw size={14} />
-                Reset
-              </button>
-              <SubmitButton onClick={handleSubmit} />
-            </div>
+        </div>
+
+        <div className="flex flex-col gap-1 w-[230px]">
+          <FormLabel required>Plant Name</FormLabel>
+          <SelectInput
+            options={PLANT_OPTIONS}
+            value={form.plant}
+            onChange={handleSelect('plant')}
+            placeholder="Select Plant"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1 w-[230px]">
+          <FormLabel required>Select Line</FormLabel>
+          <SelectInput
+            options={LINE_OPTIONS}
+            value={form.line}
+            onChange={handleSelect('line')}
+            placeholder="Select Line"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 pb-[2px]">
+            <ResetButton onClick={handleReset} />
+          <SubmitButton onClick={handleSubmit} />
+        </div>
+      </div>
+
+      {showTable && (
+        <>
+          {/* Table section label */}
+          <div className="my-2 mb-1">
+            <h3 className="text-[15px] font-semibold text-[var(--title)]">
+              Process Order Confirm
+            </h3>
           </div>
 
-      {/* Table section label */}
-      <div className="my-2 mb-1">
-        <h3 className="text-[15px] font-semibold text-[">
-          Process Order Confirm
-        </h3>
-      </div>
+          {/* Table */}
+          <div className="overflow-x-auto w-full">
+            <Table1 columns={columns} data={tableData} />
+            <Pagination />
+          </div>
+        </>
+      )}
 
-      {/* Table */}
-      <div className="overflow-x-auto w-full">
-        <Table1 columns={columns} data={tableData} />
-        <Pagination />
-      </div>
+      <PoDetailsModal isOpen={isPoModalOpen} onClose={() => setIsPoModalOpen(false)} />
 
     </div>
   )

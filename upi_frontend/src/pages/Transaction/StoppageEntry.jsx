@@ -8,24 +8,14 @@ import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import TextInput from '../../components/Common/Form/TextInput'
 import DateTimePicker from '../../components/Common/Form/DatePicker'
-import { getAPI } from '../../utils/api'
-
-const MOCK_DATA = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  resource: 'U1CLML',
-  stopTime: '07:22:02',
-  startTime: '07:22:02',
-  duration: '00:00:23',
-  material: 'N53C123',
-  type: '',
-  reason: '',
-  department: '',
-  equipment: '',
-  remarks: '',
-  sapStatus: '',
-}))
+import { getAPI, postAPI } from '../../utils/api'
+import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import UploadFileModal from '../../components/Common/Modals/UploadFileModal'
+import ResetButton from '../../components/Common/Form/ResetButton'
+import ActionButton from '../../components/Common/Form/ActionButton'
 
 const StoppageEntry = () => {
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [plantOptions, setPlantOptions] = useState([])
   const [lineOptions, setLineOptions] = useState([])
   const [form, setForm] = useState({
@@ -34,9 +24,12 @@ const StoppageEntry = () => {
     line: '',
   })
 
-  const [tableData, setTableData] = useState(MOCK_DATA)
+  const [tableData, setTableData] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [editForm, setEditForm] = useState({})
+  const [typeOptions, setTypeOptions] = useState([]);
+  const [reasonOptions, setReasonOptions] = useState([]);
+  const [sapDeptOptions, setSapDeptOptions] = useState([]);
 
   const inlineInput = (field, placeholder) => (value, row) => {
     if (editingId === row.id) {
@@ -50,12 +43,40 @@ const StoppageEntry = () => {
             background: 'var(--input-enable-bg)',
             border: '1px solid var(--input-enable-border)',
             color: 'var(--picker-text)',
-            width: '60px',       // 👈 fixed width instead of minWidth
+            width: '60px',
           }}
         />
       )
     }
     return <span>{value || '—'}</span>
+  }
+
+  const formatTime = (isoString) => {
+    if (!isoString) return '—';
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+    } catch (error) {
+      return isoString;
+    }
+  }
+
+  const formatDuration = (isoString) => {
+    if (!isoString) return '—';
+    try {
+      const date = new Date(isoString);
+      const hours = String(date.getUTCHours()).padStart(2, '0');
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    } catch (error) {
+      return isoString;
+    }
   }
 
   const inlineSelect = (field, options, placeholder) => (value, row) => {
@@ -69,7 +90,7 @@ const StoppageEntry = () => {
             background: 'var(--input-enable-bg)',
             border: '1px solid var(--input-enable-border)',
             color: 'var(--picker-text)',
-            width: '75px',       // 👈 fixed width
+            width: '75px',
           }}
         >
           <option value="">{placeholder}</option>
@@ -82,21 +103,67 @@ const StoppageEntry = () => {
     return <span>{value || '—'}</span>
   }
 
-  // dummy options
-  const TYPE_OPTIONS = [{ label: 'Type A', value: 'type_a' }]
-  const REASON_OPTIONS = [{ label: 'GM02', value: 'gm02' }]
-  const DEPT_OPTIONS = [{ label: 'Dept 1', value: 'dept_1' }]
+
+
   const EQUIP_OPTIONS = [{ label: 'Equip 1', value: 'equip_1' }]
 
+  const toggleSelect = (id) => {
+    setTableData((prev) =>
+      prev.map((row) =>
+        row.id === id ? { ...row, selected: !row.selected } : row
+      )
+    );
+  };
+
   const columns = [
+    {
+      key: 'selected',
+      label: 'Select',
+      render: (value, row) => (
+        <CheckboxInput
+          checked={value}
+          onChange={() => toggleSelect(row.id)}
+        />
+      ),
+    },
     { key: 'resource', label: 'Resource' },
-    { key: 'stopTime', label: 'Stop Time', render: inlineInput('stopTime', 'Stop Time') },
-    { key: 'startTime', label: 'Start Time', render: inlineInput('startTime', 'Start Time') },
-    { key: 'duration', label: 'Duration' },
+    {
+      key: 'stopTime', label: 'Stop Time', render: (value, row) => {
+        if (editingId === row.id) {
+          return inlineInput('stopTime', 'Stop Time')(value, row);
+        }
+        return <span>{formatTime(value)}</span>;
+      }
+    },
+    {
+      key: 'startTime', label: 'Start Time', render: (value, row) => {
+        if (editingId === row.id) {
+          return inlineInput('startTime', 'Start Time')(value, row);
+        }
+        return <span>{formatTime(value)}</span>;
+      }
+    },
+    { key: 'duration', label: 'Duration', render: (value) => <span>{formatDuration(value)}</span> },
     { key: 'material', label: 'Material', render: inlineInput('material', 'Material') },
-    { key: 'type', label: 'Type', render: inlineSelect('type', TYPE_OPTIONS, 'Type') },
-    { key: 'reason', label: 'Reason', render: inlineSelect('reason', REASON_OPTIONS, 'Reason') },
-    { key: 'department', label: 'Department', render: inlineSelect('department', DEPT_OPTIONS, 'Depart..') },
+    {
+      key: 'type',
+      label: 'Type',
+      render: inlineSelect(
+        'type',
+        typeOptions,
+        'Type'
+      ),
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      render: inlineSelect(
+        'reason',
+        reasonOptions,
+        'Reason'
+      ),
+    },
+    { key: 'department', label: 'Department', render: inlineSelect('department', sapDeptOptions, 'Depart..') },
     { key: 'equipment', label: 'Equipment', render: inlineSelect('equipment', EQUIP_OPTIONS, 'Equipme..') },
     { key: 'remarks', label: 'Remarks', render: inlineInput('remarks', 'Remarks') },
     {
@@ -212,6 +279,90 @@ const StoppageEntry = () => {
     fetchPlants();
   }, []);
 
+  const fetchStoppageTypes = async () => {
+    try {
+      const response = await getAPI(
+        '/stoppageEntry/getStoppageTypeList'
+      );
+
+      const formattedTypes =
+        response?.map((item) => ({
+          label: item.Descr,
+          value: item.StoppageType1,
+        })) || [];
+
+      setTypeOptions(formattedTypes);
+
+
+    } catch (error) {
+      console.error(
+        'Error fetching stoppage types:',
+        error
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchStoppageTypes();
+  }, [])
+
+  const fetchReasons = async (plantCode) => {
+    try {
+      const payload = {
+        PlantCode: plantCode,
+      };
+
+      const response = await postAPI(
+        '/stoppageEntry/getReasonList',
+        payload
+      );
+
+      const formattedReasons =
+        response?.reasonData?.map((item) => ({
+          label: item.ReasonName,
+          value: item.ReasonCode,
+        })) || [];
+
+      setReasonOptions(formattedReasons);
+
+      console.log(
+        'Stoppage Reasons:',
+        formattedReasons
+      );
+    } catch (error) {
+      console.error(
+        'Error fetching stoppage reasons:',
+        error
+      );
+    }
+  };
+
+  const fetchSAPDepartments = async () => {
+    try {
+
+      const response = await getAPI('/stoppageEntry/getSAPDeptList');
+      const formattedDept =
+        response?.map((item) => ({
+          label: item.DESCR,
+          value: item.ABTNR,
+        })) || [];
+
+      setSapDeptOptions(formattedDept);
+
+
+
+    } catch (error) {
+      console.error(
+        'Error fetching SAP departments:',
+        error
+      );
+    }
+  }
+
+  useEffect(() => {
+    fetchSAPDepartments();
+  }, [])
+
   const handlePlantChange = async (e) => {
     const plantCode = e.target.value;
     const selectedPlant = plantOptions.find(
@@ -229,14 +380,64 @@ const StoppageEntry = () => {
     } else {
       setLineOptions([]);
     }
+
+    await fetchReasons(plantCode);
   };
 
   const handleReset = () => {
     setForm({ date: '', plant: '', line: '' })
     setLineOptions([])
+    setTableData([])
   }
 
-  const handleSubmit = () => console.log('Submitted:', form)
+  const handleSubmit = async () => {
+    try {
+      if (!form.date || !form.plant || !form.line) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Format dates for API
+      const selectedDate = new Date(form.date);
+      const fromDate = new Date(selectedDate);
+      fromDate.setHours(0, 0, 0, 0);
+
+      const toDate = new Date();
+      toDate.setHours(23, 59, 59, 999);
+
+      const payload = {
+        Line: form.line,
+        FromDate: fromDate.toISOString(),
+        ToDate: toDate.toISOString(),
+        PlantCode: form.plant,
+      };
+
+      const response = await postAPI('/stoppageEntry/getStoppageEntry', payload);
+
+      // Map API response to table format
+      if (response.stoppageEntryData && Array.isArray(response.stoppageEntryData)) {
+        const mappedData = response.stoppageEntryData.map((item) => ({
+          id: item.Id,
+          selected: false,
+          resource: item.Resource,
+          stopTime: item.StopTime,
+          startTime: item.StartTime,
+          duration: item.Duration,
+          material: item.Material,
+          type: item.Type,
+          reason: item.Reason,
+          department: item.Department,
+          equipment: item.Equipment,
+          remarks: item.Remarks,
+          sapStatus: item.SapStatus,
+        }));
+        setTableData(mappedData);
+      }
+    } catch (error) {
+      console.error('Error fetching stoppage entry data:', error);
+      alert('Failed to fetch stoppage entry data');
+    }
+  }
 
   return (
     <div className="w-full h-full">
@@ -282,7 +483,7 @@ const StoppageEntry = () => {
         </div>
 
         <div className="flex items-center gap-2 pb-[2px]">
-          <button
+          {/* <button
             onClick={handleReset}
             className="flex items-center gap-1.5 px-4 py-[6px] rounded-lg text-sm font-medium transition hover:opacity-80"
             style={{
@@ -293,29 +494,25 @@ const StoppageEntry = () => {
           >
             <RefreshCcw size={14} />
             Reset
-          </button>
+          </button> */}
+          <ResetButton onClick={handleReset} />
           <SubmitButton onClick={handleSubmit} />
         </div>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex my-2 items-center justify-start gap-2">
-          <button
-            className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white transition hover:opacity-90"
-            style={{ background: 'var(--submit-button-bg)' }}
-          >
-            <SendHorizontal size={14} />
-            Send to SAP
-          </button>
+          <ActionButton icon={SendHorizontal} label="Send to SAP" onClick={() => alert("Send to SAP clicked")} />
+
           <label className="text-[var(--text-color)] text-sm font-medium">
-            2 items selected
+            {tableData.filter((row) => row.selected).length} items selected
           </label>
         </div>
 
         {/* Icon buttons with tooltips */}
         <div className="flex my-2 items-center justify-end gap-4 mr-10">
-          <IconButton icon={Upload} tooltip="Upload" />
-          <IconButton icon={TableProperties} tooltip="Excel Template" />
+          <IconButton icon={Upload} tooltip="Upload" onClick={() => setIsUploadModalOpen(true)} />
+          {/* <IconButton icon={TableProperties} tooltip="Excel Template" /> */}
 
 
         </div>
@@ -328,6 +525,11 @@ const StoppageEntry = () => {
         />
         <Pagination />
       </div>
+
+      <UploadFileModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
 
     </div>
   )

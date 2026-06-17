@@ -1,13 +1,27 @@
 'use client';
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Pagination from "../Pagination/Pagination";
 
 const Table1 = ({
   columns = [],
   data = [],
   renderActions,
+  showPagination = true,
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const totalPages = Math.ceil(data.length / rowsPerPage) || 1;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data.length, rowsPerPage]);
+
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = showPagination ? data.slice(startIndex, startIndex + rowsPerPage) : data;
+
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-3">
             {/* Adjust border color according to theme */}
       <div className="w-full overflow-x-auto rounded-xl border-t border-l border-r  border-[var(--form-border)]"> 
 
@@ -16,17 +30,24 @@ const Table1 = ({
           {/* adjust bg color and gradiant accordint to the theme */}
           <thead className="bg-gradient-to-r from-orange-400 to-orange-300 text-black">
             <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="text-[14px] text-left px-2 py-1 font-semibold whitespace-nowrap border-b border-[var(--form-border)]"
-                >
-                  {col.label}
-                </th>
-              ))}
+              {columns.map((col) => {
+                const firstVal = data.length > 0 ? data[0][col.key] : null;
+                const isNumberColumn = firstVal !== null && firstVal !== '' && !isNaN(Number(firstVal));
+                const isSrNo = col.label === 'Sr No.' || col.label === 'Sr. No.';
+                const isAction = col.label === 'Action' || col.label === 'Actions';
+                const isCenter = isNumberColumn || isAction || col.center;
+                return (
+                  <th
+                    key={col.key}
+                    className={`text-[14px] px-2 py-1 font-semibold whitespace-nowrap border-b border-[var(--form-border)] ${isCenter ? 'text-center' : 'text-left'} ${isSrNo ? 'w-[70px]' : ''}`}
+                  >
+                    {col.label}
+                  </th>
+                );
+              })}
 
               {renderActions && (
-                <th className="text-[14px] px-2 py-1 text-left font-semibold border-b border-[var(--form-border)]">
+                <th className="text-[14px] px-2 py-1 text-center  font-semibold border-b border-[var(--form-border)]">
                   Actions
                 </th>
               )}
@@ -35,26 +56,35 @@ const Table1 = ({
 
           {/* adjust color for table body according to theme */}
           <tbody className="border-b border-[var(--form-border)] ">
-            {data.map((row, index) => (
+            {currentData.map((row, index) => (
                 // if want add color for hover effect
               <tr
                 key={index}
                 className="border-b border-[var(--form-border)]    transition "
               >
-                {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    className="text-[13px] px-2 py-1 whitespace-nowrap text-sm"
-                  >
-                    {col.render
-                      ? col.render(row[col.key], row)
-                      : row[col.key]}
-                  </td>
-                ))}
+                {columns.map((col) => {
+                  const value = row[col.key];
+                  const isNumber = value !== null && value !== '' && !isNaN(Number(value));
+                  const isSrNo = col.label === 'Sr No.' || col.label === 'Sr. No.';
+                  const isAction = col.label === 'Action' || col.label === 'Actions';
+                  const isCenter = isNumber || isAction || col.center;
+                  return (
+                    <td
+                      key={col.key}
+                      className={`text-[13px] px-2 py-1 whitespace-nowrap text-sm ${isCenter ? 'text-center' : 'text-left'} ${isSrNo ? 'w-[70px]' : ''}`}
+                    >
+                      {col.render
+                        ? (isAction ? <div className="flex justify-center">{col.render(value, row)}</div> : col.render(value, row))
+                        : value}
+                    </td>
+                  );
+                })}
 
                 {renderActions && (
-                  <td className="px-6 py-1 ">
-                    {renderActions(row)}
+                  <td className="px-2 py-1 text-center ">
+                    <div className="flex justify-center">
+                      {renderActions(row)}
+                    </div>
                   </td>
                 )}
               </tr>
@@ -63,6 +93,16 @@ const Table1 = ({
 
         </table>
       </div>
+
+      {showPagination && data.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          rowsPerPage={rowsPerPage}
+          onRowsChange={setRowsPerPage}
+        />
+      )}
     </div>
   );
 };

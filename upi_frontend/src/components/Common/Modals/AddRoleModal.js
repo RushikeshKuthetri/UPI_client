@@ -4,6 +4,8 @@ import FormLabel from '../Form/InputLabel'
 import TextInput from '../Form/TextInput'
 import CheckboxInput from '../Form/CheckboxInput'
 import SubmitButton from '../Form/SubmitButton'
+import BackButton from '../Form/BackButton'
+import NextButton from '../Form/NextButton'
 
 const MAX_DESC = 10
 
@@ -21,6 +23,10 @@ const AddRoleModal = ({ onClose, onSave }) => {
   }
 
   const handleSave = () => {
+    if (!form.roleName || !form.description) {
+      alert('Please fill in all required fields.')
+      return
+    }
     onSave?.(form)
     onClose()
   }
@@ -99,7 +105,7 @@ const AddRoleModal = ({ onClose, onSave }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3 mt-2">
-          <button
+          {/* <button
             onClick={onClose}
             className="px-4 py-1.5 rounded-lg text-sm font-medium transition hover:opacity-80"
             style={{
@@ -109,8 +115,9 @@ const AddRoleModal = ({ onClose, onSave }) => {
             }}
           >
             Close
-          </button>
-          <SubmitButton onClick={handleSave} />
+          </button> */}
+           <BackButton onClick={onClose} label="Close"/>
+          <NextButton onClick={handleSave} label="Save"/>
         </div>
       </div>
     </div>

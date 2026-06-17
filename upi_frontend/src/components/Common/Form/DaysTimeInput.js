@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import SelectInput from './SelectInput';
 import { ClockIcon } from 'lucide-react';
@@ -32,7 +30,7 @@ const TimePicker = ({ value, onChange }) => {
       {/* Input */}
       <div
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-between px-2 py-[5px] rounded-lg text-[13px] cursor-pointer"
+        className="flex items-center justify-between px-2 py-[5px] h-[36px] rounded-lg text-[13px] cursor-pointer"
         style={{
           background: 'var(--input-enable-bg)',
           border: '1px solid var(--input-enable-border)',
@@ -48,25 +46,41 @@ const TimePicker = ({ value, onChange }) => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 bg-white border rounded-lg shadow flex">
-          <div className="max-h-[150px] overflow-y-auto">
+        <div className="absolute z-50 mt-1 bg-[var(--input-enable-bg)] border border-[var(--input-enable-border)] rounded-lg shadow-lg flex overflow-hidden">
+          <div
+            className="max-h-[150px] overflow-y-auto w-[52px] hide-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             {hourOptions.map((h) => (
               <div
                 key={h}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(h, minutes ?? 0)}
-                className="px-3 py-1 text-sm cursor-pointer hover:bg-gray-100"
+                className={`px-3 py-1.5 text-[13px] text-center cursor-pointer transition-colors duration-150 ${
+                  hours === h
+                    ? 'bg-[#FD9F35] text-white'
+                    : 'text-[var(--select-input-value)] hover:bg-[var(--select-input-hover)]'
+                }`}
               >
                 {pad(h)}
               </div>
             ))}
           </div>
 
-          <div className="max-h-[150px] overflow-y-auto border-l">
+          <div
+            className="max-h-[150px] overflow-y-auto border-l border-[var(--input-enable-border)] w-[52px] hide-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             {minuteOptions.map((m) => (
               <div
                 key={m}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(hours ?? 0, m)}
-                className="px-3 py-1 text-sm cursor-pointer hover:bg-gray-100"
+                className={`px-3 py-1.5 text-[13px] text-center cursor-pointer transition-colors duration-150 ${
+                  minutes === m
+                    ? 'bg-[#FD9F35] text-white'
+                    : 'text-[var(--select-input-value)] hover:bg-[var(--select-input-hover)]'
+                }`}
               >
                 {pad(m)}
               </div>
@@ -107,7 +121,7 @@ const DaysTimeInput = ({
     <div className="flex flex-col gap-1 w-full">
       {/* Label */}
       {label && (
-        <label className="text-sm font-medium">
+        <label className="block text-sm text-[var(--input-label)] font-medium mb-1">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>

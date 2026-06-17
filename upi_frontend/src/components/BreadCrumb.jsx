@@ -9,7 +9,7 @@ import { ImFilesEmpty } from "react-icons/im";
 const ROUTE_MAP = {
     "dashboard": { label: "Dashboard", icon: MdDashboard },
     "manage-users": { label: "Manage User", icon: FaUser },
-    "transaction": { label: "Transaction", icon: FaExchangeAlt },
+    "transaction": { label: "Transaction", icon: FaExchangeAlt, unclickable: true },
     "grade-change": { label: "Grade Change" },
     "stoppage-entry": { label: "Stoppage Entry" },
     "meter-reading": { label: "Meter Reading", },
@@ -17,13 +17,13 @@ const ROUTE_MAP = {
     "stoppage-alert": { label: "Stoppage Alert", },
     "standby-equipment": { label: "StandBy Equipment", },
     "update-po-bom": { label: "Update PO BOM", },
-    "enable-manual-upload": { label: "Enable Manual Upload",  },
-    "admin": { label: "Manage Admin", icon: IoSettingsOutline },
-    "business-unit": { label: "Business Unit",},
+    "enable-manual-upload": { label: "Enable Manual Upload", },
+    "admin": { label: "Manage Admin", icon: IoSettingsOutline, unclickable: true },
+    "business-unit": { label: "Business Unit", },
     "plant-details": { label: "Plant Details" },
     "roles": { label: "Roles", },
     "role-menu-mapping": { label: "Role Menu Mapping", },
-    "manage-contacts": { label: "Manage Contacts",},
+    "manage-contacts": { label: "Manage Contacts", },
     "manage-sms": { label: "Manage SMS", },
     "reports": { label: "Reports", icon: ImFilesEmpty },
 };
@@ -101,9 +101,14 @@ export default function BreadCrumb() {
                                 {Icon && <Icon size={14} />}
                                 {crumb.label}
                             </span>
+                        ) : crumb.unclickable ? (
+                            // Unclickable parent route
+                            <span className="flex items-center gap-1 font-medium text-[var(--text-color)]">
+                                {Icon && <Icon size={14} />}
+                                {crumb.label}
+                                <span className="text-[var(--card-subtle)]">/</span>
+                            </span>
                         ) : (
-
-
                             // Ancestor — primary color, clickable
                             <button
                                 onClick={() => navigate(crumb.path)}

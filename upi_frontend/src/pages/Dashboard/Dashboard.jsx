@@ -127,18 +127,6 @@ const Dashboard = () => {
             <div className='my-2'>
                 <Table1 columns={columns} data={paginatedData} />
             </div>
-            <div className='mx-1'>
-                <Pagination 
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsChange={(rows) => {
-                        setRowsPerPage(rows)
-                        setCurrentPage(1)
-                    }}
-                />
-            </div>
 
         </div>
     )

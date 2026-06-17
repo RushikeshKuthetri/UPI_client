@@ -1,50 +1,110 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import SearchBar from '../../components/Common/Form/SearchInput'
 import SubmitButton from '../../components/Common/Form/SubmitButton'
 import CheckboxInput from '../../components/Common/Form/CheckboxInput'
 import { SquarePen } from 'lucide-react'
-
-const MOCK_DATA = Array.from({ length: 12 }, (_, i) => ({
-  id: i + 1,
-  srNo: i + 1,
-  plantName: 'Aditya Cement Works',
-  displayName: 'Aditya Cement Works',
-  businessUnit: 'UTCL',
-  isActive: i === 0,
-}))
+import { getAPI } from '../../utils/api'
 
 const PlantDetails = () => {
-  const [tableData, setTableData] = useState(MOCK_DATA)
+  const [tableData, setTableData] = useState([])
   const [search, setSearch] = useState('')
+
+  const fetchPlantDetails = async () => {
+    try {
+      const response = await getAPI(
+        '/plant-master'
+      )
+
+      console.log(
+        'Plant Details:',
+        response.data
+      )
+
+      // API data map for table
+     const formattedData =
+  response.data.map(
+    (item, index) => ({
+      id: index + 1,
+      srNo: item.SrNo,
+      plantName: item.PlantName,
+      displayName: item.DisplayName,
+      businessUnit: item.BusinessUnit,
+      isActive: item.IsActive,
+    })
+  )
+
+      setTableData(formattedData)
+
+    } catch (error) {
+      console.error(
+        'Error fetching plant details:',
+        error
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetchPlantDetails()
+  }, [])
 
   const filtered = tableData.filter(
     (row) =>
-      row.plantName.toLowerCase().includes(search.toLowerCase()) ||
-      row.displayName.toLowerCase().includes(search.toLowerCase()) ||
-      row.businessUnit.toLowerCase().includes(search.toLowerCase())
+      row.plantName
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      row.displayName
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      row.businessUnit
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
   )
 
   const toggleActive = (id) => {
     setTableData((prev) =>
-      prev.map((row) => (row.id === id ? { ...row, isActive: !row.isActive } : row))
+      prev.map((row) =>
+        row.id === id
+          ? {
+              ...row,
+              isActive:
+                !row.isActive,
+            }
+          : row
+      )
     )
   }
 
   const columns = [
-    { key: 'srNo', label: 'Sr No.' },
-    { key: 'plantName', label: 'Plant Name' },
-    { key: 'displayName', label: 'Display Name' },
-    { key: 'businessUnit', label: 'Business Unit' },
+    {
+      key: 'srNo',
+      label: 'Sr No.',
+    },
+    {
+      key: 'plantName',
+      label: 'Plant Name',
+    },
+    {
+      key: 'displayName',
+      label: 'Display Name',
+    },
+    {
+      key: 'businessUnit',
+      label: 'Business Unit',
+    },
     {
       key: 'isActive',
       label: 'Is Active',
       render: (value, row) => (
-        <CheckboxInput
-          checked={value}
-          onChange={() => toggleActive(row.id)}
-        />
+        <div className="flex justify-center">
+          <CheckboxInput
+            checked={value}
+            onChange={() =>
+              toggleActive(row.id)
+            }
+          />
+        </div>
       ),
     },
     {
@@ -53,9 +113,14 @@ const PlantDetails = () => {
       render: (_, row) => (
         <button
           className="transition hover:opacity-70"
-          style={{ color: '#8A38F5' }}
+          style={{
+            color: '#8A38F5',
+          }}
         >
-          <SquarePen size={15} strokeWidth={2.5} />
+          <SquarePen
+            size={15}
+            strokeWidth={2.5}
+          />
         </button>
       ),
     },
@@ -69,11 +134,16 @@ const PlantDetails = () => {
         <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
           Plant Details
         </h2>
+
         <SearchBar
           placeholder="Search..."
           width="w-[300px]"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
         />
       </div>
 
@@ -82,7 +152,9 @@ const PlantDetails = () => {
 
         {/* Add Button */}
         <div className="flex justify-end">
-          <SubmitButton>Add Plant</SubmitButton>
+          <SubmitButton>
+            Add Plant
+          </SubmitButton>
         </div>
 
         {/* Table */}
@@ -94,7 +166,6 @@ const PlantDetails = () => {
         </div>
 
         <Pagination />
-
       </div>
     </div>
   )
