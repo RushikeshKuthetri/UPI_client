@@ -1,16 +1,17 @@
 import { PersonStanding, RefreshCcw, SendHorizontal, Sigma, SquarePen } from 'lucide-react'
 import React, { useState } from 'react'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import TextInput from '../../components/Common/Form/TextInput'
-import IconButton from '../../components/Common/Form/IconButton'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
+import TextInput from '../../components/Common/Form/Inputs/TextInput'
+import IconButton from '../../components/Common/Form/Buttons/IconButton'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import DateTimePicker from '../../components/Common/Form/DatePicker'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
-import ResetButton from '../../components/Common/Form/ResetButton'
-import ActionButton from '../../components/Common/Form/ActionButton'
+import DateTimePicker from '../../components/Common/Form/Inputs/DatePicker'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 
 const PLANT_OPTIONS = [
     { label: 'Plant A', value: 'plant_a' },
@@ -55,7 +56,7 @@ const MeterReading = () => {
     };
 
     const columns = [
-      
+
         { key: 'meterId', label: 'Meter ID' },
         { key: 'description', label: 'Description' },
         { key: 'meterNumber', label: 'Meter Number' },
@@ -101,22 +102,20 @@ const MeterReading = () => {
     return (
         <div className="w-full h-full">
             <div className="flex justify-between items-center mb-3">
-                <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-                    Meter Reading
-                </h2>
+                <Title label="Meter Reading" />
             </div>
 
             <div className="flex w-full flex-wrap items-end justify-start gap-4 px-4 py-4 rounded-xl border border-[var(--form-border)]">
                 <div className="flex flex-col gap-1 w-[230px]">
                     <FormLabel required>Select Date</FormLabel>
                     <DateTimePicker
-            value={form.date}
-            // onChange={(date) => setStartDate(date)}
-            onChange={(date) => setForm((prev) => ({ ...prev, date }))}
-            placeholder="Select Date"
-            showTime={false}
-            dateFormat="dd/MM/yyyy"
-          />
+                        value={form.date}
+                        // onChange={(date) => setStartDate(date)}
+                        onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+                        placeholder="Select Date"
+                        showTime={false}
+                        dateFormat="dd/MM/yyyy"
+                    />
                 </div>
 
                 <div className="flex flex-col gap-1 w-[230px]">

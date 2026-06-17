@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import FormLabel from '../Form/InputLabel'
-import TextInput from '../Form/TextInput'
-import SubmitButton from '../Form/SubmitButton'
-import BackButton from '../Form/BackButton'
-import NextButton from '../Form/NextButton'
+import FormLabel from '../TitleAndLabel/InputLabel'
+import TextInput from '../Form/Inputs/TextInput'
+import BackButton from '../Form/Buttons/BackButton'
+import NextButton from '../Form/Buttons/NextButton'
 
 const AddBOMItemModal = ({ onClose, onSave }) => {
   const [form, setForm] = useState({
@@ -38,7 +37,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
       'batch',
       'weightfeeder',
     ];
-    
+
     for (const field of requiredFields) {
       if (!form[field]) {
         alert('Please fill in all required fields.');
@@ -184,8 +183,8 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3 mt-6">
-                 <BackButton onClick={onClose} label="Close"/>
-                       <NextButton onClick={handleSave} label="Save" className='' />
+          <BackButton onClick={onClose} label="Close" />
+          <NextButton onClick={handleSave} label="Save" className='' />
 
         </div>
       </div>

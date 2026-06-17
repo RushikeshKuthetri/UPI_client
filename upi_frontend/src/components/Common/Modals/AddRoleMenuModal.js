@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import FormLabel from '../Form/InputLabel'
-import TextInput from '../Form/TextInput'
-import SelectInput from '../Form/SelectInput'
-import SubmitButton from '../Form/SubmitButton'
-import NextButton from '../Form/NextButton'
-import BackButton from '../Form/BackButton'
+import FormLabel from '../TitleAndLabel/InputLabel'
+import TextInput from '../Form/Inputs/TextInput'
+import SelectInput from '../Form/Inputs/SelectInput'
+import NextButton from '../Form/Buttons/NextButton'
+import BackButton from '../Form/Buttons/BackButton'
 
 const MENU_OPTIONS = [
   { label: 'Grade Change', value: 'grade_change' },
@@ -89,8 +88,8 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3 mt-2">
-          <BackButton onClick={onClose} label="Close"/>
-          <NextButton onClick={handleSave} label="Save"/>
+          <BackButton onClick={onClose} label="Close" />
+          <NextButton onClick={handleSave} label="Save" />
         </div>
       </div>
     </div>

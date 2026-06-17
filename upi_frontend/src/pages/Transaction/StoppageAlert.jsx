@@ -1,15 +1,16 @@
 'use client';
 import React, { useState } from 'react';
-import FormLabel from '../../components/Common/Form/InputLabel';
-import SelectInput from '../../components/Common/Form/SelectInput';
-import SubmitButton from '../../components/Common/Form/SubmitButton';
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel';
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput';
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton';
 import Table1 from '../../components/Common/Table/Table';
 import Pagination from '../../components/Common/Pagination/Pagination';
 import { RefreshCcw, Plus } from 'lucide-react';
 import AddNewModal from '../../components/Common/Modals/AddNewModal';
-import DateTimePicker from '../../components/Common/Form/DatePicker';
-import ResetButton from '../../components/Common/Form/ResetButton';
-import ActionButton from '../../components/Common/Form/ActionButton';
+import DateTimePicker from '../../components/Common/Form/Inputs/DatePicker';
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton';
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton';
+import Title from '../../components/Common/TitleAndLabel/Title';
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -76,9 +77,7 @@ const StoppageAlert = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Stoppage Alert
-        </h2>
+        <Title label="Stoppage Alert" />
       </div>
 
       {/* Filters */}

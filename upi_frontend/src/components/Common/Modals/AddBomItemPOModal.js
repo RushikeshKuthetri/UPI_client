@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import FormLabel from '../Form/InputLabel';
-import TextInput from '../Form/TextInput';
-import DateTimePicker from '../Form/DatePicker';
-import BackButton from '../Form/BackButton';
-import NextButton from '../Form/NextButton';
+import FormLabel from '../TitleAndLabel/InputLabel';
+import TextInput from '../Form/Inputs/TextInput';
+import DateTimePicker from '../Form/Inputs/DatePicker';
+import BackButton from '../Form/Buttons/BackButton';
+import NextButton from '../Form/Buttons/NextButton';
 
 const AddBomItemPOModal = ({ isOpen, onClose }) => {
   const [form, setForm] = useState({
@@ -43,7 +43,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 transition hover:opacity-70"
-        
+
         >
           <X size={20} />
         </button>
@@ -156,8 +156,8 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="flex justify-end gap-3 mt-8">
-            <BackButton onClick={onClose} label="Close"/>
-           <NextButton onClick={onClose} label="Save" className='' />
+          <BackButton onClick={onClose} label="Close" />
+          <NextButton onClick={onClose} label="Save" className='' />
         </div>
       </div>
     </div>

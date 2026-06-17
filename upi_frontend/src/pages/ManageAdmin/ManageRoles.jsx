@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import SearchBar from '../../components/Common/Form/SearchInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import SearchBar from '../../components/Common/Form/Inputs/SearchInput'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
 import { SquarePen } from 'lucide-react'
 import AddRoleModal from '../../components/Common/Modals/AddRoleModal'
 import { getAPI } from '../../utils/api'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const ManageRoles = () => {
   const [tableData, setTableData] = useState([])
@@ -70,10 +71,10 @@ const ManageRoles = () => {
       prev.map((row) =>
         row.id === id
           ? {
-              ...row,
-              isActive:
-                !row.isActive,
-            }
+            ...row,
+            isActive:
+              !row.isActive,
+          }
           : row
       )
     )
@@ -131,9 +132,7 @@ const ManageRoles = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Manage Roles
-        </h2>
+        <Title label="Manage Roles" />
 
         <SearchBar
           placeholder="Search..."
@@ -152,13 +151,7 @@ const ManageRoles = () => {
 
         {/* Add Button */}
         <div className="flex justify-end">
-          <SubmitButton
-            onClick={() =>
-              setShowModal(true)
-            }
-          >
-            Add Role
-          </SubmitButton>
+          <ActionButton onClick={() => setShowModal(true)} label={"Add Role"} />
         </div>
 
         {/* Table */}

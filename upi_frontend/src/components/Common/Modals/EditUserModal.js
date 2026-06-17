@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import InputLabel from '../Form/InputLabel'
-import TextInput from '../Form/TextInput'
-import FormLabel from '../Form/InputLabel'
-import SubmitButton from '../Form/SubmitButton'
-import SelectInput from '../Form/SelectInput'
-import CheckboxInput from '../Form/CheckboxInput'
+import InputLabel from '../TitleAndLabel/InputLabel'
+import TextInput from '../Form/Inputs/TextInput'
+import FormLabel from '../TitleAndLabel/InputLabel'
+
+import SelectInput from '../Form/Inputs/SelectInput'
+import CheckboxInput from '../Form/Inputs/CheckboxInput'
+import SubmitButton from '../Form/Buttons/SubmitButton'
 
 
 const TABS = ['Add User', 'Assign Business Unit', 'Assign Plant', 'Assign Role']
@@ -21,8 +22,8 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     mobileNumber: user?.mobileNumber || '',
     email: user?.email || '',
     isActive: user?.isActive || false,
-      plant: user?.plant || [],
-      role: user?.role || [], 
+    plant: user?.plant || [],
+    role: user?.role || [],
   })
 
   const handleChange = (e) => {
@@ -36,30 +37,30 @@ const EditUserModal = ({ user, onClose, onSave }) => {
   }
 
   const PLANT_OPTIONS = [
-  { label: 'Ratnagiri Cement Works', value: 'ratnagiri' },
-  { label: 'Pali Cement Works', value: 'pali' },
-  { label: 'Hirmi Cement Works', value: 'hirmi' },
-  { label: 'Awarpur Cement Works', value: 'awarpur' },
-  { label: 'Kovaya Cement Works', value: 'kovaya' },
-  { label: 'Magdalla Cement Works', value: 'magdalla' },
-]
+    { label: 'Ratnagiri Cement Works', value: 'ratnagiri' },
+    { label: 'Pali Cement Works', value: 'pali' },
+    { label: 'Hirmi Cement Works', value: 'hirmi' },
+    { label: 'Awarpur Cement Works', value: 'awarpur' },
+    { label: 'Kovaya Cement Works', value: 'kovaya' },
+    { label: 'Magdalla Cement Works', value: 'magdalla' },
+  ]
 
-const ROLE_OPTIONS = [
-  { label: 'Admin', value: 'admin' },
-  { label: 'Power User', value: 'power_user' },
-  { label: 'Users', value: 'users' },
-]
+  const ROLE_OPTIONS = [
+    { label: 'Admin', value: 'admin' },
+    { label: 'Power User', value: 'power_user' },
+    { label: 'Users', value: 'users' },
+  ]
 
   return (
     <div
-  className="fixed inset-0 z-50 flex items-center justify-center 
+      className="fixed inset-0 z-50 flex items-center justify-center 
              bg-black/30 backdrop-blur-sm"
-  onClick={(e) => e.target === e.currentTarget && onClose()}
->
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div
-  className="relative w-[560px] rounded-2xl px-5 py-5 shadow-2xl flex flex-col"
-  style={{ background: 'var(--modal-bg)', minHeight: '420px' }}
->
+        className="relative w-[560px] rounded-2xl px-5 py-5 shadow-2xl flex flex-col"
+        style={{ background: 'var(--modal-bg)', minHeight: '420px' }}
+      >
         {/* Close */}
         <button
           onClick={onClose}
@@ -78,146 +79,146 @@ const ROLE_OPTIONS = [
         </h2>
 
         {/* Tabs */}
-       <div className="flex mx-auto w-full items-center justify-center   my-3 bg-[var(--modal-button-tab)] rounded-[5px]">
-  {TABS.map((tab, i) => (
-    <button
-      key={tab}
-      onClick={() => setActiveTab(i)}
-      className="px-5 py-1 text-sm font-medium transition whitespace-nowrap"
-      style={
-        activeTab === i
-          ? {
-              background: 'var(--submit-button-bg)',
-              color: '#000000',
-              borderRadius: '3px',
-            }
-          : {
-              color: 'var(--text-color)',
-              background: 'transparent',
-              borderRadius: '0px',
-            }
-      }
-    >
-      {tab}
-    </button>
-  ))}
-</div>
-    <div className="flex-1 min-h-[220px]">
-        {/* Tab: Add User */}
-       {activeTab === 0 && (
-  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+        <div className="flex mx-auto w-full items-center justify-center   my-3 bg-[var(--modal-button-tab)] rounded-[5px]">
+          {TABS.map((tab, i) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(i)}
+              className="px-5 py-1 text-sm font-medium transition whitespace-nowrap"
+              style={
+                activeTab === i
+                  ? {
+                    background: 'var(--submit-button-bg)',
+                    color: '#000000',
+                    borderRadius: '3px',
+                  }
+                  : {
+                    color: 'var(--text-color)',
+                    background: 'transparent',
+                    borderRadius: '0px',
+                  }
+              }
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div className="flex-1 min-h-[220px]">
+          {/* Tab: Add User */}
+          {activeTab === 0 && (
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4">
 
-    {/* First Name */}
-    <div className="flex flex-col gap-1">
-      <FormLabel required>First Name</FormLabel>
-      <TextInput
-        name="firstName"
-        value={form.firstName}
-        onChange={handleChange}
-        placeholder="Enter First Name"
-      />
-    </div>
+              {/* First Name */}
+              <div className="flex flex-col gap-1">
+                <FormLabel required>First Name</FormLabel>
+                <TextInput
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="Enter First Name"
+                />
+              </div>
 
-    {/* User Name */}
-    <div className="flex flex-col gap-1">
-      <FormLabel required>User Name</FormLabel>
-      <TextInput
-        name="userName"
-        value={form.userName}
-        onChange={handleChange}
-        placeholder="Enter User Name"
-      />
-    </div>
+              {/* User Name */}
+              <div className="flex flex-col gap-1">
+                <FormLabel required>User Name</FormLabel>
+                <TextInput
+                  name="userName"
+                  value={form.userName}
+                  onChange={handleChange}
+                  placeholder="Enter User Name"
+                />
+              </div>
 
-    {/* Last Name */}
-    <div className="flex flex-col gap-1">
-      <FormLabel required>Last Name</FormLabel>
-      <TextInput
-        name="lastName"
-        value={form.lastName}
-        onChange={handleChange}
-        placeholder="Enter Last Name"
-      />
-    </div>
+              {/* Last Name */}
+              <div className="flex flex-col gap-1">
+                <FormLabel required>Last Name</FormLabel>
+                <TextInput
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter Last Name"
+                />
+              </div>
 
-    {/* Mobile Number */}
-    <div className="flex flex-col gap-1">
-      <FormLabel required>Mobile Number</FormLabel>
-      <TextInput
-        name="mobileNumber"
-        value={form.mobileNumber}
-        onChange={handleChange}
-        placeholder="Enter Mobile Number"
-      />
-    </div>
+              {/* Mobile Number */}
+              <div className="flex flex-col gap-1">
+                <FormLabel required>Mobile Number</FormLabel>
+                <TextInput
+                  name="mobileNumber"
+                  value={form.mobileNumber}
+                  onChange={handleChange}
+                  placeholder="Enter Mobile Number"
+                />
+              </div>
 
-    {/* Email ID */}
-    <div className="flex flex-col gap-1">
-      <FormLabel required>Email ID</FormLabel>
-      <TextInput
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        placeholder="Enter Email"
-      />
-    </div>
+              {/* Email ID */}
+              <div className="flex flex-col gap-1">
+                <FormLabel required>Email ID</FormLabel>
+                <TextInput
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Enter Email"
+                />
+              </div>
 
-    {/* Is Active */}
-    {/* Is Active */}
-<div className="flex items-center gap-3 pt-5 mt-3">
-  <FormLabel required>Is Active</FormLabel>
-  <CheckboxInput
-    checked={form.isActive}
-    onChange={() => setForm((prev) => ({ ...prev, isActive: !prev.isActive }))}
-  />
-</div>
+              {/* Is Active */}
+              {/* Is Active */}
+              <div className="flex items-center gap-3 pt-5 mt-3">
+                <FormLabel required>Is Active</FormLabel>
+                <CheckboxInput
+                  checked={form.isActive}
+                  onChange={() => setForm((prev) => ({ ...prev, isActive: !prev.isActive }))}
+                />
+              </div>
 
-  </div>
-)}
+            </div>
+          )}
 
-        {/* Placeholder for other tabs */}
-         {activeTab === 1 && (
-          <div className="flex flex-col gap-2">
-            <FormLabel required>Select Business Unit</FormLabel>
-             <div className="w-[250px]">
-      <SelectInput
-        value={form.businessUnit}
-        onChange={(e) => setForm((prev) => ({ ...prev, businessUnit: e.target.value }))}
-        placeholder="Select Business Unit"
-      />
-    </div>
-          </div>
-        )}
+          {/* Placeholder for other tabs */}
+          {activeTab === 1 && (
+            <div className="flex flex-col gap-2">
+              <FormLabel required>Select Business Unit</FormLabel>
+              <div className="w-[250px]">
+                <SelectInput
+                  value={form.businessUnit}
+                  onChange={(e) => setForm((prev) => ({ ...prev, businessUnit: e.target.value }))}
+                  placeholder="Select Business Unit"
+                />
+              </div>
+            </div>
+          )}
 
           {activeTab === 2 && (
-          <div className="flex flex-col gap-2">
-            <FormLabel required>Select Plant</FormLabel>
-             <div className="w-[250px]">
-     <SelectInput
-        isMulti
-        options={PLANT_OPTIONS}
-        value={form.plant}
-        onChange={(selected) => setForm((prev) => ({ ...prev, plant: selected }))}
-        placeholder="Select Plant"
-      />
-    </div>
-          </div>
-        )}
+            <div className="flex flex-col gap-2">
+              <FormLabel required>Select Plant</FormLabel>
+              <div className="w-[250px]">
+                <SelectInput
+                  isMulti
+                  options={PLANT_OPTIONS}
+                  value={form.plant}
+                  onChange={(selected) => setForm((prev) => ({ ...prev, plant: selected }))}
+                  placeholder="Select Plant"
+                />
+              </div>
+            </div>
+          )}
 
-             {activeTab === 3 && (
-          <div className="flex flex-col gap-2">
-            <FormLabel required>Select Role</FormLabel>
-             <div className="w-[250px]">
-     <SelectInput
-        isMulti
-        options={ROLE_OPTIONS}
-        value={form.role}
-        onChange={(selected) => setForm((prev) => ({ ...prev, role: selected }))}
-        placeholder="Select Role"
-      />
-    </div>
-          </div>
-        )}
+          {activeTab === 3 && (
+            <div className="flex flex-col gap-2">
+              <FormLabel required>Select Role</FormLabel>
+              <div className="w-[250px]">
+                <SelectInput
+                  isMulti
+                  options={ROLE_OPTIONS}
+                  value={form.role}
+                  onChange={(selected) => setForm((prev) => ({ ...prev, role: selected }))}
+                  placeholder="Select Role"
+                />
+              </div>
+            </div>
+          )}
 
         </div>
 
@@ -234,7 +235,7 @@ const ROLE_OPTIONS = [
           >
             Close
           </button>
-         <SubmitButton/>
+          <SubmitButton />
         </div>
       </div>
     </div>

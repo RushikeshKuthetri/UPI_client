@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { X, Target, FileText, Globe, Folder, Upload, TableProperties, SquarePen, Split, Plus } from 'lucide-react';
 import Table1 from '../Table/Table';
-import BackButton from '../Form/BackButton';
-import SubmitButton from '../Form/SubmitButton';
+import BackButton from '../Form/Buttons/BackButton';
 import AddBomItemPOModal from './AddBomItemPOModal';
 import UploadFileModal from './UploadFileModal';
-import NextButton from '../Form/NextButton';
-import ActionButton from '../Form/ActionButton';
-import IconButton from '../Form/IconButton';
+import NextButton from '../Form/Buttons/NextButton';
+import ActionButton from '../Form/Buttons/ActionButton';
+import IconButton from '../Form/Buttons/IconButton';
 
 const MODAL_MOCK_DATA = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -189,7 +188,6 @@ const PoDetailsModal = ({ isOpen, onClose }) => {
         {/* Footer Actions */}
         <div className="flex justify-end gap-3 mt-4">
           <BackButton onClick={onClose} label="  Skip and Close" />
-          {/* <SubmitButton onClick={onClose} label="Validate and Close" className='' />       */}
           <NextButton onClick={onClose} label="Validate and Close" className='' />
         </div>
 

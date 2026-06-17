@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import SearchBar from '../../components/Common/Form/SearchInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import SearchBar from '../../components/Common/Form/Inputs/SearchInput'
 
 import { SquarePen } from 'lucide-react'
 import AddRoleMenuModal from '../../components/Common/Modals/AddRoleMenuModal'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const MOCK_DATA = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,
@@ -51,9 +52,7 @@ const RoleMenuMapping = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Role Menu Mapping
-        </h2>
+        <Title label="Role Menu Mapping" />
         <SearchBar
           placeholder="Search..."
           width="w-[300px]"
@@ -67,9 +66,7 @@ const RoleMenuMapping = () => {
 
         {/* Add Button */}
         <div className="flex justify-end">
-          <SubmitButton onClick={() => setShowModal(true)}>
-            Add Role Menu
-          </SubmitButton>
+          <ActionButton onClick={() => setShowModal(true)} label={"Add Role Menu"} />
         </div>
 
         {/* Table */}

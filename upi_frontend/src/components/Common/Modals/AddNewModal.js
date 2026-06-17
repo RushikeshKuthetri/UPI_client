@@ -1,14 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import FormLabel from '../Form/InputLabel';
-import SelectInput from '../Form/SelectInput';
-import DaysTimeInput from '../Form/DaysTimeInput';
-import DateTimePicker from '../Form/DatePicker';
-import TextInput from '../Form/TextInput';
-import SingleTimeInput from '../Form/SingleTimeInput';
-import NextButton from '../Form/NextButton';
-import BackButton from '../Form/BackButton';
+import FormLabel from '../TitleAndLabel/InputLabel';
+import SelectInput from '../Form/Inputs/SelectInput';
+import DaysTimeInput from '../Form/Inputs/DaysTimeInput';
+import DateTimePicker from '../Form/Inputs/DatePicker';
+import TextInput from '../Form/Inputs/TextInput';
+import SingleTimeInput from '../Form/Inputs/SingleTimeInput';
+import NextButton from '../Form/Buttons/NextButton';
+import BackButton from '../Form/Buttons/BackButton';
 
 const AddNewModal = ({ isOpen, onClose }) => {
 
@@ -106,21 +106,21 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Line</FormLabel>
-            <SelectInput 
-              placeholder="Select Line" 
-              value={line} 
-              onChange={(e) => setLine(e.target.value)} 
-              error={errors.line} 
+            <SelectInput
+              placeholder="Select Line"
+              value={line}
+              onChange={(e) => setLine(e.target.value)}
+              error={errors.line}
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Resource</FormLabel>
-            <SelectInput 
-              placeholder="Select Resource" 
-              value={resource} 
-              onChange={(e) => setResource(e.target.value)} 
-              error={errors.resource} 
+            <SelectInput
+              placeholder="Select Resource"
+              value={resource}
+              onChange={(e) => setResource(e.target.value)}
+              error={errors.resource}
             />
           </div>
 
@@ -159,21 +159,21 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Stoppage Type</FormLabel>
-            <SelectInput 
-              placeholder="Select Stoppage Type" 
-              value={stoppageType} 
-              onChange={(e) => setStoppageType(e.target.value)} 
-              error={errors.stoppageType} 
+            <SelectInput
+              placeholder="Select Stoppage Type"
+              value={stoppageType}
+              onChange={(e) => setStoppageType(e.target.value)}
+              error={errors.stoppageType}
             />
           </div>
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Impact on Dispatch</FormLabel>
-            <SelectInput 
-              placeholder="Select Impact in Dispatch" 
-              value={impact} 
-              onChange={(e) => setImpact(e.target.value)} 
-              error={errors.impact} 
+            <SelectInput
+              placeholder="Select Impact in Dispatch"
+              value={impact}
+              onChange={(e) => setImpact(e.target.value)}
+              error={errors.impact}
             />
           </div>
 
@@ -188,11 +188,11 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
           <div className="flex flex-col gap-1">
             <FormLabel required>Stock Position</FormLabel>
-            <SelectInput 
-              placeholder="Select Stock Position" 
-              value={stockPosition} 
-              onChange={(e) => setStockPosition(e.target.value)} 
-              error={errors.stockPosition} 
+            <SelectInput
+              placeholder="Select Stock Position"
+              value={stockPosition}
+              onChange={(e) => setStockPosition(e.target.value)}
+              error={errors.stockPosition}
             />
           </div>
         </div>
@@ -286,7 +286,7 @@ const AddNewModal = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3">
-          <BackButton onClick={onClose} label="Close"/>
+          <BackButton onClick={onClose} label="Close" />
           <NextButton onClick={handleSave} label="Save" />
         </div>
       </div>

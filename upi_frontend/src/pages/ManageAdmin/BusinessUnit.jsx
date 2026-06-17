@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import SearchBar from '../../components/Common/Form/SearchInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import SearchBar from '../../components/Common/Form/Inputs/SearchInput'
 import { SquarePen } from 'lucide-react'
 import { getAPI } from '../../utils/api'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const BusinessUnit = () => {
   const [tableData, setTableData] = useState([])
@@ -93,9 +94,7 @@ const BusinessUnit = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Business Unit
-        </h2>
+        <Title label="Business Unit" />
 
         <SearchBar
           placeholder="Search..."
@@ -112,9 +111,10 @@ const BusinessUnit = () => {
 
         {/* Add Button */}
         <div className="flex justify-end">
-          <SubmitButton>
+          {/* <SubmitButton>
             Add Business Unit
-          </SubmitButton>
+          </SubmitButton> */}
+          <ActionButton label={"Add Business Unit"} />
         </div>
 
         {/* Table */}

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 import { Check, ClockFading, Merge, RefreshCcw, SendHorizontal, Split, SquarePen, TableProperties, Undo2, Upload, X } from 'lucide-react'
-import IconButton from '../../components/Common/Form/IconButton'
+import IconButton from '../../components/Common/Form/Buttons/IconButton'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import TextInput from '../../components/Common/Form/TextInput'
-import DateTimePicker from '../../components/Common/Form/DatePicker'
+import TextInput from '../../components/Common/Form/Inputs/TextInput'
+import DateTimePicker from '../../components/Common/Form/Inputs/DatePicker'
 import { getAPI, postAPI } from '../../utils/api'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
 import UploadFileModal from '../../components/Common/Modals/UploadFileModal'
-import ResetButton from '../../components/Common/Form/ResetButton'
-import ActionButton from '../../components/Common/Form/ActionButton'
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const StoppageEntry = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
@@ -444,9 +445,7 @@ const StoppageEntry = () => {
 
       {/* Page Title */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Stoppage Entry
-        </h2>
+        <Title label="Stoppage Entry" />
       </div>
 
       {/* Filter Card */}

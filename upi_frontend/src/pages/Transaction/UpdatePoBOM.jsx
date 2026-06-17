@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 import { Plus, RefreshCcw } from 'lucide-react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import AddBOMItemModal from '../../components/Common/Modals/AddBOMItemModal'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
 import { getAPI, postAPI } from '../../utils/api'
-import ResetButton from '../../components/Common/Form/ResetButton'
-import ActionButton from '../../components/Common/Form/ActionButton'
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const UpdatePoBOM = () => {
 
@@ -23,7 +24,7 @@ const UpdatePoBOM = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showTable, setShowTable] = useState(false)
 
-  
+
   const [allPlants, setAllPlants] = useState([])
   const [allLines, setAllLines] = useState([])
 
@@ -45,7 +46,7 @@ const UpdatePoBOM = () => {
   const [loadingMaterials, setLoadingMaterials] =
     useState(false)
 
-  
+
   const [bomGridData, setBomGridData] = useState([])
   const [loadingBomData, setLoadingBomData] = useState(false)
 
@@ -62,7 +63,7 @@ const UpdatePoBOM = () => {
 
       setResourceOptions([])
 
-     
+
       const filteredLines = allLines
         .filter(
           (item) =>
@@ -298,7 +299,7 @@ const UpdatePoBOM = () => {
         response
       )
 
-  
+
 
       const formattedMaterials = response.map(
         (item) => ({
@@ -399,7 +400,7 @@ const UpdatePoBOM = () => {
 
   const columns = [
     { key: 'goods', label: 'Goods' },
-  
+
     {
       key: 'baseMaterial',
       label: 'Base Material',
@@ -433,9 +434,7 @@ const UpdatePoBOM = () => {
 
       {/* Page Title */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Update PO BOM
-        </h2>
+        <Title label="Update PO BOM" />
       </div>
 
       {/* Filter Card */}
@@ -503,10 +502,10 @@ const UpdatePoBOM = () => {
                 ? 'Loading...'
                 : 'Select Material'
             }
-            // disabled={
-            //   !form.resource ||
-            //   loadingMaterials
-            // }
+          // disabled={
+          //   !form.resource ||
+          //   loadingMaterials
+          // }
           />
         </div>
 
@@ -522,7 +521,7 @@ const UpdatePoBOM = () => {
       {showTable && (
         <div>
           <div className="py-1">
-                    <ActionButton icon={Plus} label="Add BOM Item" onClick={() => setShowAddModal(true)} />
+            <ActionButton icon={Plus} label="Add BOM Item" onClick={() => setShowAddModal(true)} />
           </div>
 
 
@@ -532,7 +531,7 @@ const UpdatePoBOM = () => {
             </div>
           ) : bomGridData.length === 0 ? (
             <div className="py-8 text-center text-gray-500">
-              {form.material 
+              {form.material
                 ? 'No BOM data available'
                 : 'Select all filters to load BOM data'}
             </div>

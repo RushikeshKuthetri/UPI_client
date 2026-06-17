@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
-import TextInput from '../../components/Common/Form/TextInput'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
+import TextInput from '../../components/Common/Form/Inputs/TextInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
 import { Eye, RefreshCcw, SquarePen, Undo2 } from 'lucide-react'
-import DateTimePicker from '../../components/Common/Form/DatePicker'
+import DateTimePicker from '../../components/Common/Form/Inputs/DatePicker'
 import PoDetailsModal from '../../components/Common/Modals/PoDetailsModal'
-import ResetButton from '../../components/Common/Form/ResetButton'
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 
 const PLANT_OPTIONS = [
   { label: 'Plant A', value: 'plant_a' },
@@ -88,9 +89,7 @@ const ProcessOrderConfirm = () => {
 
       {/* Title */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Process Order Confirm
-        </h2>
+        <Title label="Process Order Confirm" />
       </div>
 
       {/* Filter Card */}
@@ -128,7 +127,7 @@ const ProcessOrderConfirm = () => {
         </div>
 
         <div className="flex items-center gap-2 pb-[2px]">
-            <ResetButton onClick={handleReset} />
+          <ResetButton onClick={handleReset} />
           <SubmitButton onClick={handleSubmit} />
         </div>
       </div>

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
 import { CalendarCheck, Check, ClockFading, CloudCog, Merge, PersonStanding, RefreshCcw, SendHorizontal, SquarePen, Upload, X } from 'lucide-react'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import IconButton from '../../components/Common/Form/IconButton'
-import TextInput from '../../components/Common/Form/TextInput'
+import IconButton from '../../components/Common/Form/Buttons/IconButton'
+import TextInput from '../../components/Common/Form/Inputs/TextInput'
 import { getAPI, postAPI } from '../../utils/api'
-import DateTimePicker from '../../components/Common/Form/DatePicker'
+import DateTimePicker from '../../components/Common/Form/Inputs/DatePicker'
 import UploadFileModal from '../../components/Common/Modals/UploadFileModal'
-import ActionButton from '../../components/Common/Form/ActionButton'
-import ResetButton from '../../components/Common/Form/ResetButton'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import ResetButton from '../../components/Common/Form/Buttons/ResetButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 
 
 // ── Tooltip Icon Button ──────────────────────────────────────────
@@ -43,10 +44,10 @@ const GradeChange = () => {
   const [tableData, setTableData] = useState([])
   const [resourceData, setResourceData] = useState([])
   const [reasonOptions, setReasonOptions] = useState([]);
-const [editingRowId, setEditingRowId] =
-  useState(null);
+  const [editingRowId, setEditingRowId] =
+    useState(null);
 
-const [tempReason, setTempReason] =useState("");
+  const [tempReason, setTempReason] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [form, setForm] = useState({
     date: '',
@@ -99,21 +100,21 @@ const [tempReason, setTempReason] =useState("");
     }
   };
 
-useEffect(() => {
-  fetchPlants();
-  fetchReasons();
-}, []);
+  useEffect(() => {
+    fetchPlants();
+    fetchReasons();
+  }, []);
 
 
-const handleReasonChange = (id, value) => {
-  setTableData((prev) =>
-    prev.map((row) =>
-      row.id === id
-        ? { ...row, reason: value }
-        : row
-    )
-  );
-};
+  const handleReasonChange = (id, value) => {
+    setTableData((prev) =>
+      prev.map((row) =>
+        row.id === id
+          ? { ...row, reason: value }
+          : row
+      )
+    );
+  };
 
 
   const handlePlantChange = async (e) => {
@@ -162,81 +163,81 @@ const handleReasonChange = (id, value) => {
     { key: 'startTime', label: 'Start Time' },
     { key: 'stopTime', label: 'Stop Time' },
     { key: 'duration', label: 'Duration' },
- {
-  key: 'reason',
-  label: 'Reason',
-  render: (value, row) => {
-    const isEditing =
-      editingRowId === row.id;
+    {
+      key: 'reason',
+      label: 'Reason',
+      render: (value, row) => {
+        const isEditing =
+          editingRowId === row.id;
 
-    return isEditing ? (
-    <SelectInput
-  compact
-  options={reasonOptions}
-  value={tempReason}
-  onChange={(e) =>
-    setTempReason(e.target.value)
-  }
-/>
-    ) : (
-      <span>
-        {
-          reasonOptions.find(
-            (r) => r.value === value
-          )?.label || value || '—'
-        }
-      </span>
-    );
-  },
-},
+        return isEditing ? (
+          <SelectInput
+            compact
+            options={reasonOptions}
+            value={tempReason}
+            onChange={(e) =>
+              setTempReason(e.target.value)
+            }
+          />
+        ) : (
+          <span>
+            {
+              reasonOptions.find(
+                (r) => r.value === value
+              )?.label || value || '—'
+            }
+          </span>
+        );
+      },
+    },
     { key: 'remarks', label: 'Remarks' },
-  {
-  key: 'action',
-  label: 'Action',
-  render: (_, row) => {
-    const isEditing =
-      editingRowId === row.id;
+    {
+      key: 'action',
+      label: 'Action',
+      render: (_, row) => {
+        const isEditing =
+          editingRowId === row.id;
 
-    return isEditing ? (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() =>
-            handleSaveReason(row.id)
-          }
-          className="text-green-600 hover:opacity-70"
-        >
-          <Check
-            size={18}
-            strokeWidth={2.5}
-          />
-        </button>
+        return isEditing ? (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() =>
+                handleSaveReason(row.id)
+              }
+              className="text-green-600 hover:opacity-70"
+            >
+              <Check
+                size={18}
+                strokeWidth={2.5}
+              />
+            </button>
 
-        <button
-          onClick={handleCancelEdit}
-          className="text-red-600 hover:opacity-70"
-        >
-          <X
-            size={18}
-            strokeWidth={2.5}
-          />
-        </button>
-      </div>
-    ) : (
-      <button
-        className="transition hover:opacity-70"
-        style={{ color: '#8A38F5' }}
-        onClick={() =>
-          handleEditClick(row)
-        }
-      >
-        <SquarePen
-          size={16}
-          strokeWidth={2.5}
-        />
-      </button>
-    );
-  },
-},
+            <button
+              onClick={handleCancelEdit}
+              className="text-red-600 hover:opacity-70"
+            >
+              <X
+                size={18}
+                strokeWidth={2.5}
+              />
+            </button>
+          </div>
+        ) : (
+          <button
+            className="transition hover:opacity-70"
+            style={{ color: '#8A38F5' }}
+            onClick={() =>
+              handleEditClick(row)
+            }
+          >
+            <SquarePen
+              size={16}
+              strokeWidth={2.5}
+            />
+          </button>
+        );
+      },
+    },
     {
       key: 'sapStatus',
       label: 'SAP status',
@@ -253,36 +254,36 @@ const handleReasonChange = (id, value) => {
     { key: 'totalDuration', label: 'Total Duration', center: true },
   ]
 
-const fetchReasons = async () => {
-  try {
-    const response = await getAPI(
-      "/grade-change/LoadReasonGridView"
-    );
+  const fetchReasons = async () => {
+    try {
+      const response = await getAPI(
+        "/grade-change/LoadReasonGridView"
+      );
 
-    console.log(
-      "Reason API for the reason field:",
-      response.data
-    );
+      console.log(
+        "Reason API for the reason field:",
+        response.data
+      );
 
-    const formattedReasons =
-      response.data.map((item) => ({
-        label: item?.GRDTX, 
-        value: item?.GRUND, 
-      }));
+      const formattedReasons =
+        response.data.map((item) => ({
+          label: item?.GRDTX,
+          value: item?.GRUND,
+        }));
 
-    console.log(
-      "Formatted Reasons:",
-      formattedReasons
-    );
+      console.log(
+        "Formatted Reasons:",
+        formattedReasons
+      );
 
-    setReasonOptions(formattedReasons);
-  } catch (error) {
-    console.error(
-      "Error fetching reasons:",
-      error
-    );
-  }
-};
+      setReasonOptions(formattedReasons);
+    } catch (error) {
+      console.error(
+        "Error fetching reasons:",
+        error
+      );
+    }
+  };
 
 
 
@@ -295,97 +296,95 @@ const fetchReasons = async () => {
     setResourceData([])
   }
 
- const handleSubmit = async () => {
-  try {
-    if (!form.date || !form.plant || !form.line) {
-      alert("Please fill all required fields");
-      return;
-    }
+  const handleSubmit = async () => {
+    try {
+      if (!form.date || !form.plant || !form.line) {
+        alert("Please fill all required fields");
+        return;
+      }
 
-    const payload = {
-      PlantCode: form.plant,
-      Line: form.line,
-      FromDate: new Date(form.date).toISOString(),
-      ToDate: new Date().toISOString(),
-    };
+      const payload = {
+        PlantCode: form.plant,
+        Line: form.line,
+        FromDate: new Date(form.date).toISOString(),
+        ToDate: new Date().toISOString(),
+      };
 
-    console.log("Payload:", payload);
+      console.log("Payload:", payload);
 
-    const data = await postAPI(
-      "/grade-change/getData",
-      payload
-    );
+      const data = await postAPI(
+        "/grade-change/getData",
+        payload
+      );
 
-    console.log("API Response:", data);
+      console.log("API Response:", data);
 
-    if (data?.success) {
-      const formattedGradeData =
-        data.gradeChangeData.map((item, index) => ({
-          id: index + 1,
-          selected: item.selected,
-          resource: item.resource,
-          material: item.material,
-          startTime: item.startTime,
-          stopTime: item.stopTime,
-          duration: item.duration,
-          reason: item.reason,
-          remarks: item.remarks,
-          sapStatus: item.sapStatus,
-          hiddenSapStatus: item.hiddenSapStatus,
-          postingDate: item.postingDate,
-          plantCode: item.plantCode,
-          serialNumber: item.serialNumber,
-        }));
-
-      const formattedResourceData =
-        data.resourceWiseDuration.map(
-          (item, index) => ({
+      if (data?.success) {
+        const formattedGradeData =
+          data.gradeChangeData.map((item, index) => ({
             id: index + 1,
-            selected: false,
+            selected: item.selected,
             resource: item.resource,
-            totalDuration: item.totalDuration,
-          })
-        );
+            material: item.material,
+            startTime: item.startTime,
+            stopTime: item.stopTime,
+            duration: item.duration,
+            reason: item.reason,
+            remarks: item.remarks,
+            sapStatus: item.sapStatus,
+            hiddenSapStatus: item.hiddenSapStatus,
+            postingDate: item.postingDate,
+            plantCode: item.plantCode,
+            serialNumber: item.serialNumber,
+          }));
 
-      setTableData(formattedGradeData);
-      setResourceData(formattedResourceData);
+        const formattedResourceData =
+          data.resourceWiseDuration.map(
+            (item, index) => ({
+              id: index + 1,
+              selected: false,
+              resource: item.resource,
+              totalDuration: item.totalDuration,
+            })
+          );
+
+        setTableData(formattedGradeData);
+        setResourceData(formattedResourceData);
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching grade change data:",
+        error
+      );
     }
-  } catch (error) {
-    console.error(
-      "Error fetching grade change data:",
-      error
+  };
+
+  const handleSaveReason = (id) => {
+    setTableData((prev) =>
+      prev.map((row) =>
+        row.id === id
+          ? { ...row, reason: tempReason }
+          : row
+      )
     );
-  }
-};
 
-const handleSaveReason = (id) => {
-  setTableData((prev) =>
-    prev.map((row) =>
-      row.id === id
-        ? { ...row, reason: tempReason }
-        : row
-    )
-  );
+    setEditingRowId(null);
+    setTempReason("");
+  };
 
-  setEditingRowId(null);
-  setTempReason("");
-};
+  const handleCancelEdit = () => {
+    setEditingRowId(null);
+    setTempReason("");
+  };
 
-const handleCancelEdit = () => {
-  setEditingRowId(null);
-  setTempReason("");
-};
-
-const handleEditClick = (row) => {
-  setEditingRowId(row.id);
-  setTempReason(row.reason); // GM02
-};
+  const handleEditClick = (row) => {
+    setEditingRowId(row.id);
+    setTempReason(row.reason); // GM02
+  };
   return (
     <div className="w-full h-full">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Grade Change
-        </h2>
+        <Title label="Grade Change" />
       </div>
 
       {/* Filters */}

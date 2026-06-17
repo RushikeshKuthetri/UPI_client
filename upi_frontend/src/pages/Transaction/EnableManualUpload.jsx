@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import FormLabel from '../../components/Common/Form/InputLabel'
-import SelectInput from '../../components/Common/Form/SelectInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
-import TextInput from '../../components/Common/Form/TextInput'
+import FormLabel from '../../components/Common/TitleAndLabel/InputLabel'
+import SelectInput from '../../components/Common/Form/Inputs/SelectInput'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
+import TextInput from '../../components/Common/Form/Inputs/TextInput'
 import { getAPI, postAPI } from '../../utils/api'
 import Table1 from '../../components/Common/Table/Table'
 import { SquarePen } from 'lucide-react'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const MODULE_OPTIONS = [
   { label: 'Grade Change', value: 'Grade Change' },
@@ -94,7 +95,7 @@ const EnableManualUpload = () => {
       );
     }
   };
-  
+
 
   const handleRemark = (e) => {
     if (e.target.value.length <= MAX_REMARK)
@@ -102,10 +103,10 @@ const EnableManualUpload = () => {
   }
 
   const handleSubmit = async () => {
-    
+
     try {
 
-      
+
       // validation
       if (
         !form.module ||
@@ -144,23 +145,23 @@ const EnableManualUpload = () => {
       console.log('API Payload:', payload);
 
       if (response?.success) {
-  alert(response.message);
+        alert(response.message);
 
-  // table data fetch
-  await fetchEnableManualUpload();
+        // table data fetch
+        await fetchEnableManualUpload();
 
-  // table visible
-  setShowTable(true);
+        // table visible
+        setShowTable(true);
 
-  // reset form
-  setForm({
-    module: '',
-    plant: '',
-    fromDate: '',
-    toDate: '',
-    remark: '',
-  });
-}
+        // reset form
+        setForm({
+          module: '',
+          plant: '',
+          fromDate: '',
+          toDate: '',
+          remark: '',
+        });
+      }
     } catch (error) {
       console.error(
         'Error creating manual upload request:',
@@ -172,63 +173,61 @@ const EnableManualUpload = () => {
   };
 
   const formatDate = (date) => {
-  if (!date) return '-';
+    if (!date) return '-';
 
-  return new Date(date).toLocaleDateString(
-    'en-GB'
-  );
-};
+    return new Date(date).toLocaleDateString(
+      'en-GB'
+    );
+  };
 
   const columns = [
-  {
-    key: 'fromDate',
-    label: 'From date',
-    render: (value) => (
-      <span>{formatDate(value)}</span>
-    ),
-  },
-  {
-    key: 'toDate',
-    label: 'To Date',
-    render: (value) => (
-      <span>{formatDate(value)}</span>
-    ),
-  },
-  {
-    key: 'module',
-    label: 'Module Name',
-  },
-  {
-    key: 'plant',
-    label: 'Plant',
-  },
-  {
-    key: 'approveStatus',
-    label: 'Approve Status',
-    render: (value) => (
-      <span>{value}</span>
-    ),
-  },
-  {
-    key: 'action',
-    label: 'Action',
-    render: () => (
-      <button
-        className="text-purple-600"
-      >
-        <SquarePen size={15} strokeWidth={2.5} />
-      </button>
-    ),
-  },
-];
+    {
+      key: 'fromDate',
+      label: 'From date',
+      render: (value) => (
+        <span>{formatDate(value)}</span>
+      ),
+    },
+    {
+      key: 'toDate',
+      label: 'To Date',
+      render: (value) => (
+        <span>{formatDate(value)}</span>
+      ),
+    },
+    {
+      key: 'module',
+      label: 'Module Name',
+    },
+    {
+      key: 'plant',
+      label: 'Plant',
+    },
+    {
+      key: 'approveStatus',
+      label: 'Approve Status',
+      render: (value) => (
+        <span>{value}</span>
+      ),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      render: () => (
+        <button
+          className="text-purple-600"
+        >
+          <SquarePen size={15} strokeWidth={2.5} />
+        </button>
+      ),
+    },
+  ];
   return (
     <div className="w-full h-full">
 
       {/* Page Title */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Enable Manual Upload
-        </h2>
+        <Title label="Enable Manual Upload" />
       </div>
 
       {/* Card */}
@@ -303,20 +302,20 @@ const EnableManualUpload = () => {
         <div className="flex justify-center">
           <SubmitButton onClick={handleSubmit} />
         </div>
- {showTable && tableData.length > 0 && (
-  <div className="rounded-xl overflow-hidden">
-    <Table1
-      columns={columns}
-      data={tableData}
-    />
-  </div>
-)}
+        {showTable && tableData.length > 0 && (
+          <div className="rounded-xl overflow-hidden">
+            <Table1
+              columns={columns}
+              data={tableData}
+            />
+          </div>
+        )}
 
-        
+
 
       </div>
 
-     
+
     </div>
   )
 }

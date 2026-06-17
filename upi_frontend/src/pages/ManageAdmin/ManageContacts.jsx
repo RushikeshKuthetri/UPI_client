@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import SearchBar from '../../components/Common/Form/SearchInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
+import SearchBar from '../../components/Common/Form/Inputs/SearchInput'
 import { SquarePen } from 'lucide-react'
+import SubmitButton from '../../components/Common/Form/Buttons/SubmitButton'
 
 const MOCK_DATA = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,

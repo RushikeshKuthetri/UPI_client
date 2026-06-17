@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import FormLabel from '../Form/InputLabel'
-import TextInput from '../Form/TextInput'
-import CheckboxInput from '../Form/CheckboxInput'
-import SubmitButton from '../Form/SubmitButton'
-import BackButton from '../Form/BackButton'
-import NextButton from '../Form/NextButton'
+import FormLabel from '../TitleAndLabel/InputLabel'
+import TextInput from '../Form/Inputs/TextInput'
+import CheckboxInput from '../Form/Inputs/CheckboxInput'
+import BackButton from '../Form/Buttons/BackButton'
+import NextButton from '../Form/Buttons/NextButton'
 
 const MAX_DESC = 10
 
@@ -116,8 +115,8 @@ const AddRoleModal = ({ onClose, onSave }) => {
           >
             Close
           </button> */}
-           <BackButton onClick={onClose} label="Close"/>
-          <NextButton onClick={handleSave} label="Save"/>
+          <BackButton onClick={onClose} label="Close" />
+          <NextButton onClick={handleSave} label="Save" />
         </div>
       </div>
     </div>

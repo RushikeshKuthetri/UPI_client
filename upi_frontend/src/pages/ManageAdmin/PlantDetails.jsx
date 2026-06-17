@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Table1 from '../../components/Common/Table/Table'
 import Pagination from '../../components/Common/Pagination/Pagination'
-import SearchBar from '../../components/Common/Form/SearchInput'
-import SubmitButton from '../../components/Common/Form/SubmitButton'
-import CheckboxInput from '../../components/Common/Form/CheckboxInput'
+import SearchBar from '../../components/Common/Form/Inputs/SearchInput'
+import CheckboxInput from '../../components/Common/Form/Inputs/CheckboxInput'
 import { SquarePen } from 'lucide-react'
 import { getAPI } from '../../utils/api'
+import ActionButton from '../../components/Common/Form/Buttons/ActionButton'
+import Title from '../../components/Common/TitleAndLabel/Title'
 
 const PlantDetails = () => {
   const [tableData, setTableData] = useState([])
@@ -23,17 +24,17 @@ const PlantDetails = () => {
       )
 
       // API data map for table
-     const formattedData =
-  response.data.map(
-    (item, index) => ({
-      id: index + 1,
-      srNo: item.SrNo,
-      plantName: item.PlantName,
-      displayName: item.DisplayName,
-      businessUnit: item.BusinessUnit,
-      isActive: item.IsActive,
-    })
-  )
+      const formattedData =
+        response.data.map(
+          (item, index) => ({
+            id: index + 1,
+            srNo: item.SrNo,
+            plantName: item.PlantName,
+            displayName: item.DisplayName,
+            businessUnit: item.BusinessUnit,
+            isActive: item.IsActive,
+          })
+        )
 
       setTableData(formattedData)
 
@@ -67,10 +68,10 @@ const PlantDetails = () => {
       prev.map((row) =>
         row.id === id
           ? {
-              ...row,
-              isActive:
-                !row.isActive,
-            }
+            ...row,
+            isActive:
+              !row.isActive,
+          }
           : row
       )
     )
@@ -131,9 +132,7 @@ const PlantDetails = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-[18px] font-medium font-poppins text-[var(--title)] -ml-0.5">
-          Plant Details
-        </h2>
+        <Title label="Plant Details" />
 
         <SearchBar
           placeholder="Search..."
@@ -152,9 +151,8 @@ const PlantDetails = () => {
 
         {/* Add Button */}
         <div className="flex justify-end">
-          <SubmitButton>
-            Add Plant
-          </SubmitButton>
+
+          <ActionButton label={"Add Plant"} />
         </div>
 
         {/* Table */}
