@@ -5,8 +5,9 @@ import TextInput from '../Form/Inputs/TextInput'
 import CheckboxInput from '../Form/Inputs/CheckboxInput'
 import BackButton from '../Form/Buttons/BackButton'
 import NextButton from '../Form/Buttons/NextButton'
+import Title from '../TitleAndLabel/Title'
 
-const MAX_DESC = 10
+const MAX_DESC = 10000
 
 const AddRoleModal = ({ onClose, onSave }) => {
   const [form, setForm] = useState({
@@ -15,19 +16,28 @@ const AddRoleModal = ({ onClose, onSave }) => {
     isActive: false,
   })
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target
     if (name === 'description' && value.length > MAX_DESC) return
     setForm((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   }
 
   const handleSave = () => {
-    if (!form.roleName || !form.description) {
-      alert('Please fill in all required fields.')
-      return
+    const newErrors = {};
+    if (!form.roleName) newErrors.roleName = 'Role Name is required';
+    if (!form.description) newErrors.description = 'Description is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onSave?.(form)
+      onClose()
     }
-    onSave?.(form)
-    onClose()
   }
 
   return (
@@ -49,12 +59,10 @@ const AddRoleModal = ({ onClose, onSave }) => {
         </button>
 
         {/* Title */}
-        <h2
-          className="text-center text-[18px] font-bold"
-          style={{ color: 'var(--title)' }}
-        >
-          Add Role
-        </h2>
+
+        <div className='flex items-center justify-center mb-2'>
+           <Title label={"Add Role"} />
+          </div>
 
         {/* Role Name */}
         <div className="flex flex-col gap-1">
@@ -64,6 +72,7 @@ const AddRoleModal = ({ onClose, onSave }) => {
             value={form.roleName}
             onChange={handleChange}
             placeholder="Enter Role Name"
+            error={errors.roleName}
           />
         </div>
 
@@ -71,18 +80,13 @@ const AddRoleModal = ({ onClose, onSave }) => {
         <div className="flex flex-col gap-1">
           <FormLabel required>Description</FormLabel>
           <div className="relative">
-            <textarea
+              <TextInput
               name="description"
-              value={form.description}
+               value={form.description}
               onChange={handleChange}
               placeholder="Enter Description here..."
-              rows={4}
-              className="w-full px-3 py-2 rounded-lg text-[13px] outline-none resize-none transition"
-              style={{
-                background: 'var(--input-enable-bg)',
-                border: '1px solid var(--input-enable-border)',
-                color: 'var(--picker-text)',
-              }}
+              rows={5}
+              error={errors.description}
             />
             <span
               className="absolute bottom-2 right-3 text-[11px]"
@@ -104,17 +108,6 @@ const AddRoleModal = ({ onClose, onSave }) => {
 
         {/* Footer */}
         <div className="flex justify-end items-center gap-3 mt-2">
-          {/* <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-lg text-sm font-medium transition hover:opacity-80"
-            style={{
-              border: '1.5px solid var(--button-border)',
-              background: 'var(--button-bg)',
-              color: 'var(--text-color)',
-            }}
-          >
-            Close
-          </button> */}
           <BackButton onClick={onClose} label="Close" />
           <NextButton onClick={handleSave} label="Save" />
         </div>

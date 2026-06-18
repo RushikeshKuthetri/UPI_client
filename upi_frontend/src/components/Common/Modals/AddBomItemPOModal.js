@@ -5,6 +5,7 @@ import TextInput from '../Form/Inputs/TextInput';
 import DateTimePicker from '../Form/Inputs/DatePicker';
 import BackButton from '../Form/Buttons/BackButton';
 import NextButton from '../Form/Buttons/NextButton';
+import Title from '../TitleAndLabel/Title';
 
 const AddBomItemPOModal = ({ isOpen, onClose }) => {
   const [form, setForm] = useState({
@@ -20,15 +21,43 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
     weighfeeder: '',
   });
 
+  const [errors, setErrors] = useState({});
+
   if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleDateChange = (date) => {
     setForm(prev => ({ ...prev, postingDate: date }));
+    if (errors.postingDate) {
+      setErrors(prev => ({ ...prev, postingDate: '' }));
+    }
+  };
+
+  const handleSave = () => {
+    const newErrors = {};
+    if (!form.processOrderNo) newErrors.processOrderNo = 'Process Order No. is required';
+    if (!form.material) newErrors.material = 'Material is required';
+    if (!form.resource) newErrors.resource = 'Resource is required';
+    if (!form.plant) newErrors.plant = 'Plant is required';
+    if (!form.postingDate) newErrors.postingDate = 'Posting Date is required';
+    if (!form.bomMaterials) newErrors.bomMaterials = 'BOM Materials is required';
+    if (!form.movtType) newErrors.movtType = 'Movt Type is required';
+    if (!form.storageLocation) newErrors.storageLocation = 'Storage Location is required';
+    if (!form.batch) newErrors.batch = 'Batch is required';
+    if (!form.weighfeeder) newErrors.weighfeeder = 'Weighfeeder is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onClose();
+    }
   };
 
   return (
@@ -48,9 +77,10 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
           <X size={20} />
         </button>
 
-        <h2 className="text-[18px] font-semibold text-center mb-6 text-[--title]">
-          Add BOM Item
-        </h2>
+        <div className='flex items-center justify-center mb-4'>
+           <Title label={"Add BOM Item"} />
+        </div>
+       
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
           <div className="flex flex-col">
@@ -60,6 +90,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.processOrderNo}
               onChange={handleChange}
               placeholder="Enter User Name"
+              error={errors.processOrderNo}
             />
           </div>
 
@@ -70,6 +101,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.material}
               onChange={handleChange}
               placeholder="Enter User ID"
+              error={errors.material}
             />
           </div>
 
@@ -80,6 +112,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.resource}
               onChange={handleChange}
               placeholder="Enter Contact No"
+              error={errors.resource}
             />
           </div>
 
@@ -90,6 +123,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.plant}
               onChange={handleChange}
               placeholder="Enter SMS Limit"
+              error={errors.plant}
             />
           </div>
 
@@ -101,6 +135,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               placeholder="dd/mm/yyyy"
               showTime={false}
               dateFormat="dd/MM/yyyy"
+              error={errors.postingDate}
             />
           </div>
 
@@ -111,6 +146,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.bomMaterials}
               onChange={handleChange}
               placeholder="Enter BOM Materials"
+              error={errors.bomMaterials}
             />
           </div>
 
@@ -121,6 +157,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.movtType}
               onChange={handleChange}
               placeholder="Enter Movt Type"
+              error={errors.movtType}
             />
           </div>
 
@@ -131,6 +168,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.storageLocation}
               onChange={handleChange}
               placeholder="Enter Storage Location"
+              error={errors.storageLocation}
             />
           </div>
 
@@ -141,6 +179,7 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.batch}
               onChange={handleChange}
               placeholder="Enter Batch"
+              error={errors.batch}
             />
           </div>
 
@@ -151,13 +190,14 @@ const AddBomItemPOModal = ({ isOpen, onClose }) => {
               value={form.weighfeeder}
               onChange={handleChange}
               placeholder="Enter User Name"
+              error={errors.weighfeeder}
             />
           </div>
         </div>
 
         <div className="flex justify-end gap-3 mt-8">
           <BackButton onClick={onClose} label="Close" />
-          <NextButton onClick={onClose} label="Save" className='' />
+          <NextButton onClick={handleSave} label="Save" className='' />
         </div>
       </div>
     </div>

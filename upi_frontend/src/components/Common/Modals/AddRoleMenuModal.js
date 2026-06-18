@@ -5,6 +5,7 @@ import TextInput from '../Form/Inputs/TextInput'
 import SelectInput from '../Form/Inputs/SelectInput'
 import NextButton from '../Form/Buttons/NextButton'
 import BackButton from '../Form/Buttons/BackButton'
+import Title from '../TitleAndLabel/Title'
 
 const MENU_OPTIONS = [
   { label: 'Grade Change', value: 'grade_change' },
@@ -23,18 +24,34 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
     menuId: '',
   })
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  }
+
+  const handleSelectChange = (e) => {
+    setForm((prev) => ({ ...prev, menuId: e.target.value }))
+    if (errors.menuId) {
+      setErrors(prev => ({ ...prev, menuId: '' }));
+    }
   }
 
   const handleSave = () => {
-    if (!form.roleName || !form.menuId) {
-      alert('Please fill in all required fields.')
-      return
+    const newErrors = {};
+    if (!form.roleName) newErrors.roleName = 'Role Name is required';
+    if (!form.menuId) newErrors.menuId = 'Menu ID is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onSave?.(form)
+      onClose()
     }
-    onSave?.(form)
-    onClose()
   }
 
   return (
@@ -55,13 +72,10 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
           <X size={20} />
         </button>
 
-        {/* Title */}
-        <h2
-          className="text-center text-[18px] font-bold"
-          style={{ color: 'var(--title)' }}
-        >
-          Add Role Menu
-        </h2>
+        <div className='flex justify-center items-center mb-4'>
+          <Title label={"Add Role Menu"}/>
+
+        </div>
 
         {/* Form Grid */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -72,6 +86,7 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
               value={form.roleName}
               onChange={handleChange}
               placeholder="Enter Role Name"
+              error={errors.roleName}
             />
           </div>
 
@@ -80,8 +95,9 @@ const AddRoleMenuModal = ({ onClose, onSave }) => {
             <SelectInput
               options={MENU_OPTIONS}
               value={form.menuId}
-              onChange={(e) => setForm((prev) => ({ ...prev, menuId: e.target.value }))}
+              onChange={handleSelectChange}
               placeholder="Select Menu ID"
+              error={errors.menuId}
             />
           </div>
         </div>

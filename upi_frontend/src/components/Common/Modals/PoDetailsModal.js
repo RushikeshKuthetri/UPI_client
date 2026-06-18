@@ -7,6 +7,7 @@ import UploadFileModal from './UploadFileModal';
 import NextButton from '../Form/Buttons/NextButton';
 import ActionButton from '../Form/Buttons/ActionButton';
 import IconButton from '../Form/Buttons/IconButton';
+import Title from '../TitleAndLabel/Title';
 
 const MODAL_MOCK_DATA = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -91,12 +92,8 @@ const PoDetailsModal = ({ isOpen, onClose }) => {
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-2">
             <div className="w-1 h-5  rounded-full"></div>
-            <h2
-              className="text-[14px] text-[--title] font-semibold"
-
-            >
-              PO Details:
-            </h2>
+            
+            <Title label={"PO Details:"} />
           </div>
           <button
             onClick={onClose}

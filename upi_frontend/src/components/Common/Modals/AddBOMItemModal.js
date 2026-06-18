@@ -4,6 +4,7 @@ import FormLabel from '../TitleAndLabel/InputLabel'
 import TextInput from '../Form/Inputs/TextInput'
 import BackButton from '../Form/Buttons/BackButton'
 import NextButton from '../Form/Buttons/NextButton'
+import Title from '../TitleAndLabel/Title'
 
 const AddBOMItemModal = ({ onClose, onSave }) => {
   const [form, setForm] = useState({
@@ -19,34 +20,35 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
     weightfeeder: '',
   })
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   }
 
   const handleSave = () => {
-    const requiredFields = [
-      'processOrderNo',
-      'material',
-      'resource',
-      'plant',
-      'postingDate',
-      'bomMaterials',
-      'movtType',
-      'storageLocation',
-      'batch',
-      'weightfeeder',
-    ];
+    const newErrors = {};
+    if (!form.processOrderNo) newErrors.processOrderNo = 'Process Order No. is required';
+    if (!form.material) newErrors.material = 'Material is required';
+    if (!form.resource) newErrors.resource = 'Resource is required';
+    if (!form.plant) newErrors.plant = 'Plant is required';
+    if (!form.postingDate) newErrors.postingDate = 'Posting Date is required';
+    if (!form.bomMaterials) newErrors.bomMaterials = 'BOM Materials is required';
+    if (!form.movtType) newErrors.movtType = 'Movt Type is required';
+    if (!form.storageLocation) newErrors.storageLocation = 'Storage Location is required';
+    if (!form.batch) newErrors.batch = 'Batch is required';
+    if (!form.weightfeeder) newErrors.weightfeeder = 'Weightfeeder is required';
 
-    for (const field of requiredFields) {
-      if (!form[field]) {
-        alert('Please fill in all required fields.');
-        return;
-      }
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onSave?.(form)
+      onClose()
     }
-
-    onSave?.(form)
-    onClose()
   }
 
   return (
@@ -68,12 +70,10 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
         </button>
 
         {/* Title */}
-        <h2
-          className="text-center text-[18px] font-bold mb-5"
-          style={{ color: 'var(--title)' }}
-        >
-          Add BOM Item
-        </h2>
+
+        <div className='flex items-center justify-center mb-4'>
+           <Title label={"Add BOM Item"} />
+          </div>
 
         {/* Form Grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-3">
@@ -85,6 +85,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.processOrderNo}
               onChange={handleChange}
               placeholder="Enter Process Order No"
+              error={errors.processOrderNo}
             />
           </div>
 
@@ -95,6 +96,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.material}
               onChange={handleChange}
               placeholder="Enter Material"
+              error={errors.material}
             />
           </div>
 
@@ -105,6 +107,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.resource}
               onChange={handleChange}
               placeholder="Enter Resource"
+              error={errors.resource}
             />
           </div>
 
@@ -115,6 +118,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.plant}
               onChange={handleChange}
               placeholder="Enter Plant"
+              error={errors.plant}
             />
           </div>
 
@@ -126,6 +130,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               onChange={handleChange}
               placeholder="dd/mm/yyyy"
               type="date"
+              error={errors.postingDate}
             />
           </div>
 
@@ -136,6 +141,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.bomMaterials}
               onChange={handleChange}
               placeholder="Enter BOM Materials"
+              error={errors.bomMaterials}
             />
           </div>
 
@@ -146,6 +152,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.movtType}
               onChange={handleChange}
               placeholder="Enter Movt Type"
+              error={errors.movtType}
             />
           </div>
 
@@ -156,6 +163,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.storageLocation}
               onChange={handleChange}
               placeholder="Enter Storage Location"
+              error={errors.storageLocation}
             />
           </div>
 
@@ -166,6 +174,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.batch}
               onChange={handleChange}
               placeholder="Enter Batch"
+              error={errors.batch}
             />
           </div>
 
@@ -176,6 +185,7 @@ const AddBOMItemModal = ({ onClose, onSave }) => {
               value={form.weightfeeder}
               onChange={handleChange}
               placeholder="Enter Weightfeeder"
+              error={errors.weightfeeder}
             />
           </div>
 

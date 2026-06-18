@@ -9,6 +9,7 @@ import TextInput from '../Form/Inputs/TextInput';
 import SingleTimeInput from '../Form/Inputs/SingleTimeInput';
 import NextButton from '../Form/Buttons/NextButton';
 import BackButton from '../Form/Buttons/BackButton';
+import Title from '../TitleAndLabel/Title';
 
 const AddNewModal = ({ isOpen, onClose }) => {
 
@@ -89,13 +90,11 @@ const AddNewModal = ({ isOpen, onClose }) => {
           <X size={20} />
         </button>
 
-        {/* Title */}
-        <h2
-          className="text-center text-[18px] font-semibold mb-4"
-          style={{ color: 'var(--title)' }}
-        >
-          Stoppage Alert Information
-        </h2>
+      <div className="flex items-center justify-center mb-4">
+        <Title label={"Stoppage Alert Information"} className="mb-4" />
+
+      </div>
+
 
         {/* Stop Info */}
         <h3 className="text-[14px] font-semibold mb-2 " style={{ color: 'var(--title)' }}>
